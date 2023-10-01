@@ -80,7 +80,7 @@ const Signup = () => {
                             })}
                         />
 
-                        <Button type="submit">Sign up</Button>
+                        <Button type="submit">Create Account</Button>
                     </div>
                 </form>
             </div>
