@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import authService from './appwrite/auth.js';
 import { login, logout } from './store/authSlice';
 import {Header, Footer} from './components/index';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,9 @@ function App() {
   return !loading ? (
     <>
       <Header/>
-      <main></main>
+      <main>
+        <Outlet/>
+      </main>
       <Footer/>
     </>
   ) : null

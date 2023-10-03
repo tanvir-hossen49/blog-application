@@ -9,10 +9,11 @@ import PostCard from './PostCard';
 import Logo from "./Logo";
 import Signup from "./Signup";
 import Login from "./Login";
-import Protected from "./AuthLayout";
+import AuthLayout from "./AuthLayout";
 import RealTimeEditor from "./RealTimeEditor";
+import PostForm from "./Post-form/PostForm";
 
 export {
     Header, Footer, Container, Input, Button, LogoutBtn, Select, PostCard,
-    Logo, Signup, Login, Protected, RealTimeEditor
+    Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm
 };

@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { Button, Input, RealTimeEditor, Select } from '../index';
 import service from '../../appwrite/config';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
@@ -14,28 +14,29 @@ const PostForm = ({post}) => {
             status: post?.status || 'active',
         }
     });
+    const { slug } = useParams();
     const navigate = useNavigate();
-    const userData = useSelector(state => state.authSlice.userData);
+    const { userData } = useSelector(state => state.auth);
 
     const submit = async (data) => {
         if(post) {
-            const file = data.image[0] ? service.uploadFile(data.image[0]) : null
+            const file = data.featuredImg[0] ? service.uploadFile(data.featuredImg[0]) : null
 
             if(file) {
-                service.deleteFile(post.featuredImage);
+                service.deleteFile(post.featuredImg);
             }
 
             const dbPost = await service.updatePost(post.$id, {
                 ...data,
-                featuredImage: file ? file.$id : undefined
+                featuredImg: file ? file.$id : undefined
             })
 
             if(dbPost) navigate(`/post/${dbPost.$id}`)
         }else{
-            const file =await service.uploadFile(data.image[0]);
+            const file = await service.uploadFile(data.featuredImg[0]);
             if(file) {
                 const fileId = file.$id;
-                data.featuredImage = fileId;
+                data.featuredImg = fileId;
                 const dbPost = await service.createPost({
                     ...data,
                     userId: userData.$id
@@ -46,13 +47,13 @@ const PostForm = ({post}) => {
     };
 
     const slugTransform = useCallback((value) => {
-        if(value && typeof value === 'string')
+        if (value && typeof value === "string")
             return value
-            .trim()
-            .toLowerCase()
-            .replace(/^[a-zA-Z\d\s]+/g, '-')
-            .replace(/\s/g, '-');
-        return '';
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-zA-Z\d\s]+/g, "-")
+                .replace(/\s/g, "-");
+        return "";
     }, []);
 
     useEffect(() => {
@@ -82,6 +83,7 @@ const PostForm = ({post}) => {
                     label="Slug :"
                     placeholder="Slug"
                     className="mb-4"
+                    value={slug}
                     {...register("slug", { required: true })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
@@ -95,13 +97,13 @@ const PostForm = ({post}) => {
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
+                    {...register("featuredImg", { required: !post })}
                 />
 
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={service.getFilePreview(post.featuredImage)}
+                            src={service.getFilePreview(post.featuredImg)}
                             alt={post.title}
                             className="rounded-lg"
                         />

@@ -11,9 +11,11 @@ const Login = () => {
     const dispatch = useDispatch();
     const { register, handleSubmit } = useForm();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const login = async (data) => {
         setError('');
+        setLoading(true)
 
         try {
             const session = await authService.login(data);
@@ -24,6 +26,8 @@ const Login = () => {
             }
         } catch (error) {
             setError(error.message);
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -71,7 +75,7 @@ const Login = () => {
                         })}
                     />
 
-                    <Button type="submit">Sign in</Button>
+                    <Button type="submit">{loading ? 'loading...' : 'Sign in'}</Button>
                 </div>
             </form>
             </div>
