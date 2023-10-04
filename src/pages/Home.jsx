@@ -2,19 +2,35 @@ import { useState } from 'react';
 import service from '../appwrite/config';
 import { Container, PostCard } from '../components'
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPost } from '../store/postsSlice';
 
 const Home = () => {
-    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch();
+
+    const posts = useSelector(store => store.post.posts);
 
     useEffect(() => {
-        service.getPosts([]).then(posts => {
-            if(posts) setPosts(posts.documents)
-        }).catch(error => {
-            console.log('home page', error);
-        })
-    }, [])
+        if(posts.length === 0) {
+            service.getPosts([]).then(posts => {
+                const newPosts = posts.documents;
+                if(newPosts > 0) {
+                    dispatch(addPost(posts.documents));
+                }
+                setLoading(false);
+            }).catch(error => {
+                console.log('home page', error);
+                setLoading(false);
+            })
+        }else{
+            setLoading(false)
+        }
+    }, [dispatch,posts])
 
-    if(posts.length === 0) {
+    if(loading) return <h1 className='text-center text-2xl font-bold'>loading...</h1>
+
+    if(posts?.length === 0) {
         return  <div className="w-full py-8 mt-4 text-center">
             <Container>
                 <div className="flex flex-wrap">

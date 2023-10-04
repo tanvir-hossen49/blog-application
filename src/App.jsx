@@ -27,13 +27,13 @@ function App() {
   }, [dispatch])
 
   return !loading ? (
-    <>
+    <div className='flex flex-col justify-between min-h-screen'>
       <Header/>
       <main>
         <Outlet/>
       </main>
       <Footer/>
-    </>
+    </div>
   ) : null
 }
 

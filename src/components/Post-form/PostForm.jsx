@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { Button, Input, RealTimeEditor, Select } from '../index';
 import service from '../../appwrite/config';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 const PostForm = ({post}) => {
-    const {register,handleSubmit, watch, setValue, control, getValues} = useForm({
+    const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
         defaultValues: {
             title: post?.title || '',
             slug: post?.slug || '',
@@ -16,10 +16,12 @@ const PostForm = ({post}) => {
     });
     const { slug } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const { userData } = useSelector(state => state.auth);
 
     const submit = async (data) => {
         if(post) {
+            setLoading(true);
             const file = data.featuredImg[0] ? service.uploadFile(data.featuredImg[0]) : null
 
             if(file) {
@@ -30,9 +32,10 @@ const PostForm = ({post}) => {
                 ...data,
                 featuredImg: file ? file.$id : undefined
             })
-
-            if(dbPost) navigate(`/post/${dbPost.$id}`)
+            setLoading(false);
+            if(dbPost) navigate(`/post/${dbPost.$id}`);
         }else{
+            setLoading(true);
             const file = await service.uploadFile(data.featuredImg[0]);
             if(file) {
                 const fileId = file.$id;
@@ -41,9 +44,11 @@ const PostForm = ({post}) => {
                     ...data,
                     userId: userData.$id
                 })
+                setLoading(false);
                 navigate(`/post/${dbPost.$id}`)
             }
         }
+        
     };
 
     const slugTransform = useCallback((value) => {
@@ -97,7 +102,7 @@ const PostForm = ({post}) => {
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("featuredImg", { required: !post })}
+                    {...register("featuredImg", { required: post ? false : true})}
                 />
 
                 {post && (
@@ -117,7 +122,7 @@ const PostForm = ({post}) => {
                 />
 
                 <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
+                    {loading ? 'loading...' : post ? "Update" : "Submit"}
                 </Button>
             </div>
         </form>
