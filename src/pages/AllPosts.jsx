@@ -1,4 +1,4 @@
-import { Container, PostCard } from "../components";
+import { Container, PostCard, PostCardSkeleton } from "../components";
 import service from "../appwrite/config";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -12,10 +12,10 @@ const AllPosts = () => {
     const posts = useSelector(store => store.post.posts);
 
     useEffect(() => {
-        if(posts.length === 0) {
+        if(posts === null) {
             service.getPosts([]).then(posts => {
                 const newPosts = posts.documents;
-                if(newPosts > 0) {
+                if(newPosts.length > 0) {
                     dispatch(addPost(posts.documents));
                 }
                 setLoading(false);
@@ -28,7 +28,11 @@ const AllPosts = () => {
         }
     }, [dispatch,posts])
 
-    return loading ? <h1 className="text-center font-bold text-2xl">loading...</h1> : (
+    return loading ? <div className="py-8">
+            <Container> 
+                <PostCardSkeleton count={3}/>
+            </Container>
+        </div> : (
         <div className="w-full py-8">
             <Container>
                 <div className="flex flex-wrap">

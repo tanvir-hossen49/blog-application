@@ -6,7 +6,7 @@ const PostCard = ({$id, title, featuredImg, content}) => {
   const parserContent = parser(content).props.children;
 
   return (
-      <div className="w-[300px] rounded-md border">
+      <div className="w-[320px] rounded-md border">
           <div className='w-full justify-center mb-4'>
               <img src={service.getFilePreview(featuredImg)} alt={title}
               className="h-[200px] w-full rounded-md object-cover" />

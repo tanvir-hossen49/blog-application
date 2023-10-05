@@ -12,8 +12,9 @@ import Login from "./Login";
 import AuthLayout from "./AuthLayout";
 import RealTimeEditor from "./RealTimeEditor";
 import PostForm from "./Post-form/PostForm";
+import PostCardSkeleton from "./Skeleton/PostCardSkeleton";
 
 export {
     Header, Footer, Container, Input, Button, LogoutBtn, Select, PostCard,
-    Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm
+    Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm, PostCardSkeleton
 };

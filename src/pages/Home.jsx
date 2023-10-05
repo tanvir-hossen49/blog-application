@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import service from '../appwrite/config';
-import { Container, PostCard } from '../components'
+import { Container, PostCard, PostCardSkeleton } from '../components'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPost } from '../store/postsSlice';
@@ -12,10 +12,10 @@ const Home = () => {
     const posts = useSelector(store => store.post.posts);
 
     useEffect(() => {
-        if(posts.length === 0) {
+        if(posts === null) {
             service.getPosts([]).then(posts => {
                 const newPosts = posts.documents;
-                if(newPosts > 0) {
+                if(newPosts.length > 0) {
                     dispatch(addPost(posts.documents));
                 }
                 setLoading(false);
@@ -28,7 +28,9 @@ const Home = () => {
         }
     }, [dispatch,posts])
 
-    if(loading) return <h1 className='text-center text-2xl font-bold'>loading...</h1>
+    if(loading) return <div className="py-8">
+        <Container><PostCardSkeleton count={3}/></Container>
+    </div>
 
     if(posts?.length === 0) {
         return  <div className="w-full py-8 mt-4 text-center">
