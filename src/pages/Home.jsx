@@ -28,9 +28,7 @@ const Home = () => {
         }
     }, [dispatch,posts])
 
-    if(loading) return <div className="py-8">
-        <Container><PostCardSkeleton count={3}/></Container>
-    </div>
+    if(loading) return <PostCardSkeleton count={3}/>
 
     if(posts?.length === 0) {
         return  <div className="w-full py-8 mt-4 text-center">
@@ -49,11 +47,9 @@ const Home = () => {
     return (
         <div className='w-full py-8'>
             <Container>
-                <div className='flex flex-wrap'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
                     {posts?.map((post) => (
-                        <div key={post.$id} className='p-2 w-1/4'>
-                            <PostCard {...post} />
-                        </div>
+                        <PostCard key={post.$id} {...post} />
                     ))}
                 </div>
             </Container>

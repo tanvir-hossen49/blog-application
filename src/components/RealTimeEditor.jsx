@@ -34,6 +34,7 @@ const RealTimeEditor= ({name, control, label, defaultValue = ''}) => {
                                 "table",
                                 "code",
                                 "help",
+                                "lettercount",
                                 "wordcount",
                                 "anchor",
                             ],

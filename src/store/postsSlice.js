@@ -10,8 +10,12 @@ const postsSlice = createSlice({
     reducers: {
         addPost(state, action) {
             state.posts = action.payload
+        },
+        updatePost(state, action) {
+            state.posts = [...state.posts, action.payload];
         }
     }
 });
-export const { addPost } = postsSlice.actions;
+
+export const { addPost, updatePost } = postsSlice.actions;
 export default postsSlice.reducer;

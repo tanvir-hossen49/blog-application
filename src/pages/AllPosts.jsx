@@ -28,16 +28,12 @@ const AllPosts = () => {
         }
     }, [dispatch,posts])
 
-    return loading ? <div className="py-8">
-            <Container> 
-                <PostCardSkeleton count={3}/>
-            </Container>
-        </div> : (
+    return loading ? <PostCardSkeleton count={3}/> : (
         <div className="w-full py-8">
             <Container>
-                <div className="flex flex-wrap">
-                    {posts?.map(post => (
-                        <PostCard key={post.$id} {...post}  />
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+                    {posts?.map((post) => (
+                        <PostCard {...post}  key={post.$id}/>
                     ))}
                 </div>
             </Container>
