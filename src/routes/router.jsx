@@ -8,6 +8,7 @@ import AddPost from '../pages/AddPost';
 import Post from '../pages/Post';
 import EditPost from '../pages/EditPost';
 import { AuthLayout } from '../components';
+import MyPost from "../pages/MyPost";
 
 export const router = createBrowserRouter([
     {
@@ -63,6 +64,14 @@ export const router = createBrowserRouter([
                 element:(
                     <AuthLayout authentication>
                         <EditPost />
+                    </AuthLayout>
+                )
+            }, 
+            {
+                path: '/my-posts',
+                element: (
+                    <AuthLayout authentication>
+                        <MyPost/>
                     </AuthLayout>
                 )
             }

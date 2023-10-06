@@ -1,17 +1,21 @@
-import { Container, PostCard, PostCardSkeleton } from "../components";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import service from "../appwrite/config";
 import { useState } from "react";
-import { useEffect } from "react";
+import { Query} from "appwrite";
+import { Container, PostCard, PostCardSkeleton } from "../components";
 
-const AllPosts = () => {
+const MyPost = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const userData = useSelector((state) => state.auth.userData);
+    const userId = userData.$id;
+    console.log(posts);
     useEffect(() => {
         const fetchData = async () => {
           try {
             setLoading(true);
-            const response = await service.getPosts([]);
+            const response = await service.getPosts([Query.equal('userId', userId)]);
             if (response) {
               setPosts(response.documents);
             }
@@ -23,7 +27,8 @@ const AllPosts = () => {
         };
     
         fetchData();
-    }, []);
+    }, [userId]);
+
 
     return loading ? <PostCardSkeleton count={3}/> : (
         <div className="w-full py-8">
@@ -38,4 +43,4 @@ const AllPosts = () => {
     );
 };
 
-export default AllPosts;
+export default MyPost;

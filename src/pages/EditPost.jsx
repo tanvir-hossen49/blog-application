@@ -10,13 +10,20 @@ const EditPost = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        service.getPost(slug).then(post => {
-            if(post)  setPost(post);
-            else navigate('/');
-        }).catch(error => {
-            console.log('edit post page', error)
-        })
-    }, [slug, navigate])
+        const fetchPost = async () => {
+          try {
+            const fetchedPost = await service.getPost(slug);
+            if (fetchedPost) {
+              setPost(fetchedPost);
+            } else {
+              navigate('/');
+            }
+          } catch (error) {
+            console.error('Error fetching post on the edit post page:', error);
+          }
+        };
+        fetchPost();
+      }, [slug, navigate]);
 
     return post ? (
         <div className='py-8'>

@@ -23,10 +23,14 @@ const PostForm = ({post}) => {
     const [error, setError] = useState('');
 
     const submit = async (data) => {
-        if(data.content.length > 255) return setError('Content should be less than 255 char');
+        setLoading(true);
+        if(data.content.length > 2500) {
+            setLoading(false)
+            setError(`Content should be less than 2500 char. ${data.content.length}`);
+            return;
+        }
 
         if(post) {
-            setLoading(true);
             const file = data.featuredImg[0] ? service.uploadFile(data.featuredImg[0]) : null
 
             if(file) {
