@@ -8,6 +8,7 @@ import Post from '../pages/Post';
 import EditPost from '../pages/EditPost';
 import { AuthLayout } from '../components';
 import MyPost from "../pages/MyPost";
+import About from "../pages/About";
 
 export const router = createBrowserRouter([
     {
@@ -65,6 +66,9 @@ export const router = createBrowserRouter([
                         <MyPost/>
                     </AuthLayout>
                 )
+            },{
+                path: '/about',
+                element: <About />
             }
         ]
     }

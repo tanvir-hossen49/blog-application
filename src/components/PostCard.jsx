@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import parser from 'html-react-parser'
 
 const PostCard = ({$id, title, featuredImg, content}) => {  
-  const text = parser(content).map(e => e?.props?.children).toString();
+  const text = Array.isArray(parser(content)) ? parser(content).map(e => e?.props?.children).toString() : parser(content).props.children;
 
   return (
       <div className="flex gap-x-2 rounded-md border">

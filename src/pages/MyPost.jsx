@@ -10,7 +10,7 @@ const MyPost = () => {
     const [loading, setLoading] = useState(true);
     const userData = useSelector((state) => state.auth.userData);
     const userId = userData.$id;
-    console.log(posts);
+
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -29,8 +29,23 @@ const MyPost = () => {
         fetchData();
     }, [userId]);
 
+    if(loading) return <PostCardSkeleton count={3} />;
 
-    return loading ? <PostCardSkeleton count={3}/> : (
+    if(posts?.length === 0) {
+      return  <div className="w-full py-8 mt-4 text-center">
+          <Container>
+              <div className="flex flex-wrap">
+                  <div className="p-2 w-full">
+                      <h1 className="text-2xl font-bold hover:text-gray-500">
+                          no post found
+                      </h1>
+                  </div>
+              </div>
+          </Container>
+      </div>
+    }
+
+    return (
         <div className="w-full py-8">
             <Container>
                 <div className='space-y-3'>

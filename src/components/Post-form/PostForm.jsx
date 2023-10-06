@@ -31,14 +31,14 @@ const PostForm = ({post}) => {
         if(post) {
             const file = data.featuredImg[0] ? service.uploadFile(data.featuredImg[0]) : null
 
-            if(file) {
-                service.deleteFile(post.featuredImg);
-            }
-
             try {
+                if(file) {
+                    service.deleteFile(post.featuredImg);
+                }
+           
                 const dbPost = await service.updatePost(post.$id, {
                     ...data,
-                    featuredImg: file ? file.$id : undefined
+                    featuredImg: file ? file.$id : undefined,
                 })
 
                 if(dbPost) {
@@ -60,7 +60,8 @@ const PostForm = ({post}) => {
                     data.featuredImg = fileId;
                     const dbPost = await service.createPost({
                         ...data,
-                        userId: userData.$id
+                        author: userData.name,
+                        userId: userData.$id,
                     })
                     navigate(`/post/${dbPost.$id}`);
                 }catch(error) {

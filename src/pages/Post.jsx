@@ -9,7 +9,6 @@ const Post = () => {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
-    console.log(post);
     const userData = useSelector((state) => state.auth.userData);
 
     const isAuthor = post && userData ? post.userId === userData.$id : false;
@@ -56,7 +55,7 @@ const Post = () => {
                     )}
                 </div>
                 <div className="my-3 text-center text-xl font-medium">
-                   Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
+                 Author: {post.author}  | Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
                         year: 'numeric', month: 'short', day: 'numeric'
                     })}
                 </div>
