@@ -14,11 +14,6 @@ const Header = () => {
           name: 'Home',
           slug: "/",
           active: true
-        }, 
-        {
-            name: "All Posts",
-            slug: "/all-posts",
-            active: authStatus,
         },
         {
             name: "My Posts",

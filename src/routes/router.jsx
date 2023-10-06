@@ -3,7 +3,6 @@ import App from '../App'
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
-import AllPosts from '../pages/AllPosts';
 import AddPost from '../pages/AddPost';
 import Post from '../pages/Post';
 import EditPost from '../pages/EditPost';
@@ -32,14 +31,6 @@ export const router = createBrowserRouter([
                 element: (
                     <AuthLayout authentication={false}>
                         <Signup />
-                    </AuthLayout>
-                )
-            },
-            {
-                path: '/all-posts',
-                element: (
-                    <AuthLayout authentication>
-                        <AllPosts/>
                     </AuthLayout>
                 )
             },

@@ -9,7 +9,7 @@ const Post = () => {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
-
+    console.log(post);
     const userData = useSelector((state) => state.auth.userData);
 
     const isAuthor = post && userData ? post.userId === userData.$id : false;
@@ -55,12 +55,17 @@ const Post = () => {
                         </div>
                     )}
                 </div>
+                <div className="my-3 text-center text-xl font-medium">
+                   Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric'
+                    })}
+                </div>
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
                 <div className="browser-css">
                     {parse(post.content)}
-                    </div>
+                </div>
             </Container>
         </div>
     ) : null;
