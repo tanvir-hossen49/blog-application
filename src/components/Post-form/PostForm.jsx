@@ -2,9 +2,8 @@ import { useEffect, useCallback, useState } from 'react';
 import { Button, Container, Input, RealTimeEditor, Select } from '../index';
 import service from '../../appwrite/config';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { updatePost } from '../../store/postsSlice';
+import { useSelector } from 'react-redux';
 
 const PostForm = ({post}) => {
     const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
@@ -19,7 +18,6 @@ const PostForm = ({post}) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const { userData } = useSelector(state => state.auth);
-    const dispatch = useDispatch();
     const [error, setError] = useState('');
 
     const submit = async (data) => {
@@ -44,7 +42,6 @@ const PostForm = ({post}) => {
                 })
 
                 if(dbPost) {
-                    dispatch(updatePost(post));
                     navigate(`/post/${dbPost.$id}`)
                 }
 
