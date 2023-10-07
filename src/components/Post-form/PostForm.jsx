@@ -20,7 +20,7 @@ const PostForm = ({post}) => {
     const { userData } = useSelector(state => state.auth);
     const [error, setError] = useState('');
     const [filePreview, setFilePreview] = useState(null);
-    console.log(filePreview);
+    
     const submit = async (data) => {
         setLoading(true);
 

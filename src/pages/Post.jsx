@@ -55,7 +55,7 @@ const Post = () => {
                     )}
                 </div>
                 <div className="my-3 text-center text-xl font-medium">
-                 Author: {post.author}  | Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
+                 Author: <span className="capitalize">{post.author}</span>  | Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
                         year: 'numeric', month: 'short', day: 'numeric'
                     })}
                 </div>
