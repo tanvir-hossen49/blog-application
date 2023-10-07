@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import authService from './appwrite/auth.js';

@@ -50,7 +50,7 @@ export class Service {
                 conf.appDatabaseId, conf.appwriteCollectionId, slug
             );
         }catch(error) {
-            throw new Error(error);
+            // throw new Error(error);
         }
     }
 

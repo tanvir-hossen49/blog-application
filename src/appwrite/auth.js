@@ -43,7 +43,7 @@ export class AuthService {
         try{
             return await this.account.get();
         } catch(error) {
-            throw new Error(error);
+            console.log('user not found')
         }
     }
 }
