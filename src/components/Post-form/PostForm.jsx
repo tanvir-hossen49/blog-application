@@ -11,7 +11,7 @@ const PostForm = ({post}) => {
             title: post?.title || '',
             slug: post?.slug || '',
             content: post?.content || '',
-            status: post?.status || 'active',
+            status: post?.status || 'active'
         }
     });
     const { slug } = useParams();
@@ -19,36 +19,35 @@ const PostForm = ({post}) => {
     const [loading, setLoading] = useState(false);
     const { userData } = useSelector(state => state.auth);
     const [error, setError] = useState('');
-
+    const [filePreview, setFilePreview] = useState(null);
+    console.log(filePreview);
     const submit = async (data) => {
         setLoading(true);
-        if(data.content.length > 2500) {
-            setLoading(false)
-            setError(`Content should be less than 2500 char. ${data.content.length}`);
-            return;
-        }
 
         if(post) {
-            const file = data.featuredImg[0] ? service.uploadFile(data.featuredImg[0]) : null
+            const file = data.featuredImg[0] ? await service.uploadFile(data.featuredImg[0]) : null
 
             try {
-                if(file) {
-                    service.deleteFile(post.featuredImg);
-                }
-           
-                const dbPost = await service.updatePost(post.$id, {
+                const updatedData = {
                     ...data,
                     featuredImg: file ? file.$id : undefined,
-                })
+                };
+                
+                const dbPost = await service.updatePost(post.$id, updatedData);
 
+                if (dbPost && file) {
+                    console.log('ud', updatedData, 'post', post, 'file', file);
+                    service.deleteFile(post.featuredImg);
+                }
+        
                 if(dbPost) {
                     navigate(`/post/${dbPost.$id}`)
                 }
-
-                setLoading(false)
             } catch (error) {
+                console.log('update post: post form component error', error)
+                setError(error);
+            } finally{
                 setLoading(false);
-                setError(error)
             }
         }else{
             setLoading(true);
@@ -64,7 +63,7 @@ const PostForm = ({post}) => {
                         userId: userData.$id,
                     })
                     navigate(`/post/${dbPost.$id}`);
-                }catch(error) {
+                } catch(error) {
                     service.deleteFile(file.$id)
                     setError(error)
                 } finally{
@@ -73,6 +72,25 @@ const PostForm = ({post}) => {
             } else{
                 setLoading(false);
             }
+        }
+    };
+
+    const handleFileChange = (value) => {
+        const file = value.featuredImg[0]
+    
+        if (file) {
+          // Read the file as a data URL
+          const reader = new FileReader();
+    
+          reader.onloadend = () => {
+            // Set the file preview
+            setFilePreview(reader.result);
+          };
+    
+          reader.readAsDataURL(file);
+        } else {
+          // Clear file preview if no file is selected
+          setFilePreview(null);
         }
     };
 
@@ -92,6 +110,8 @@ const PostForm = ({post}) => {
                 setValue('slug', slugTransform(value.title, {
                     shouldValidate: true
                 }))
+            } else if(name === 'featuredImg') {
+                handleFileChange(value)
             }
         })
 
@@ -104,7 +124,7 @@ const PostForm = ({post}) => {
         <>
             <Container><p className='mb-5 text-red-600'>{error && error}</p></Container>
             <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-                <div className="w-2/3 px-2">
+                <div className="md:w-2/3 w-full  px-2">
                     <Input
                         label="Title :"
                         placeholder="Title"
@@ -123,7 +143,7 @@ const PostForm = ({post}) => {
                     />
                     <RealTimeEditor label="Content :" name="content" control={control} defaultValue={getValues("content")} />
                 </div>
-                <div className="w-1/3 px-2">
+                <div className="md:w-1/3 w-full mt-3 md:mt-0 px-2">
                     <Input
                         label="Featured Image :"
                         type="file"
@@ -132,11 +152,20 @@ const PostForm = ({post}) => {
                         {...register("featuredImg", { required: post ? false : true})}
                     />
 
-                    {post && (
-                        <div className="w-full mb-4">
+                    {post  && (
+                    <div className={`w-full mb-4 ${filePreview && 'hidden'}`}>
                             <img
                                 src={service.getFilePreview(post.featuredImg)}
                                 alt={post.title}
+                                className="rounded-lg"
+                            />
+                        </div>
+                    )}
+                    { filePreview && (
+                        <div className="w-full mb-4">
+                            <img
+                                src={filePreview}
+                                alt={'file preview'}
                                 className="rounded-lg"
                             />
                         </div>
