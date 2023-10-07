@@ -38,7 +38,7 @@ const Post = () => {
                     <img
                         src={service.getFilePreview(post.featuredImg)}
                         alt={post.title}
-                        className="rounded-xl"
+                        className="max-h-[300px] rounded-xl"
                     />
 
                     {isAuthor && (
