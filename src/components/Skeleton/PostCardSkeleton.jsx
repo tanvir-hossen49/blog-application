@@ -5,12 +5,12 @@ const PostCardSkeleton = ({count}) => {
     return (
         <div className="py-8">
             <Container>
-                <div className='space-y-3'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-3 '>
                     { Array(count).fill(0).map((item, i) => {
                         return (
                             <div key={i} className="flex gap-x-2 rounded-md border">
-                                <div className='md:w-1/3 w-1/2 justify-center'>
-                                    <Skeleton height={200} className="w-full rounded-md" />
+                                <div className='w-1/2 justify-center'>
+                                    <Skeleton height={200} className="h-44 w-full rounded-md object-fill" />
                                 </div>
 
                                 <div className='md:w-2/3 w-1/2'>

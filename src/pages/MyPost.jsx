@@ -48,7 +48,7 @@ const MyPost = () => {
     return (
         <div className="w-full py-8">
             <Container>
-                <div className='space-y-3'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-3 '>
                     {posts?.map((post) => (
                         <PostCard {...post}  key={post.$id}/>
                     ))}

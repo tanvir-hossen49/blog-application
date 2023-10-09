@@ -31,3 +31,12 @@ body{
 header{
     background: var(--background-color);
 }
+.browser-css ul li{
+    list-style: disc;
+    margin-left: 30px;
+}
+.browser-css table tr td{
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+}

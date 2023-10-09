@@ -6,11 +6,11 @@ const PostCard = ({$id, title, featuredImg}) => {
 
   return (
       <div className="flex gap-x-2 rounded-md border">
-          <div className='md:w-1/3 w-1/2 justify-center'>
+          <div className='w-1/2 justify-center'>
               <img src={service.getFilePreview(featuredImg)} alt={title}
-              className="h-full w-full rounded-md object-cover" />
+              className="h-44 w-full rounded-md object-fill" />
           </div>
-          <div className="md:w-2/3 w-1/2">
+          <div className="w-1/2">
             <div className="p-4">
               <h2 className='text-lg font-semibold'>{title}</h2>
               {/* <p className="mt-3 text-sm text-gray-600">
