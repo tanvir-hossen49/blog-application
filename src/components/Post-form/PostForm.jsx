@@ -3,7 +3,8 @@ import { Button, Container, Input, RealTimeEditor, Select } from '../index';
 import service from '../../appwrite/config';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSinglePost, updatePost } from '../../store/myPostsSlice';
 
 const PostForm = ({post}) => {
     const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
@@ -20,6 +21,9 @@ const PostForm = ({post}) => {
     const { userData } = useSelector(state => state.auth);
     const [error, setError] = useState('');
     const [filePreview, setFilePreview] = useState(null);
+    const dispatch = useDispatch();
+
+    const posts = useSelector(store => store.myPost.posts)
     
     const submit = async (data) => {
         setLoading(true);
@@ -36,11 +40,17 @@ const PostForm = ({post}) => {
                 const dbPost = await service.updatePost(post.$id, updatedData);
 
                 if (dbPost && file) {
-                    console.log('ud', updatedData, 'post', post, 'file', file);
                     service.deleteFile(post.featuredImg);
                 }
-        
+
                 if(dbPost) {
+                    if(posts !== null) {
+                        const { title, content, status, featuredImg} = dbPost 
+                        dispatch(updatePost({
+                            $id: post.$id, 
+                            data:{ title, content, status, featuredImg }
+                        }));
+                    }
                     navigate(`/post/${dbPost.$id}`)
                 }
             } catch (error) {
@@ -57,12 +67,17 @@ const PostForm = ({post}) => {
                 try{
                     const fileId = file.$id;
                     data.featuredImg = fileId;
-                    const dbPost = await service.createPost({
+                    const postObj = {
                         ...data,
                         author: userData.name,
                         userId: userData.$id,
-                    })
-                    navigate(`/post/${dbPost.$id}`);
+                    }
+                    const dbPost = await service.createPost(postObj);
+
+                    if(posts !== null && dbPost) {
+                        dispatch(addSinglePost(dbPost))
+                        navigate(`/post/${dbPost.$id}`);
+                    }
                 } catch(error) {
                     service.deleteFile(file.$id)
                     setError(error)

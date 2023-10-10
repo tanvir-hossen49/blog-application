@@ -3,29 +3,46 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import service from "../appwrite/config";
 import { Button, Container } from "../components";
 import parse from "html-react-parser";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteSinglePost } from "../store/myPostsSlice";
 
 const Post = () => {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const userData = useSelector((state) => state.auth.userData);
 
+    const posts = useSelector(store => store.post.posts);
+    const myPosts = useSelector(store => store.myPost.posts);
     const isAuthor = post && userData ? post.userId === userData.$id : false;
 
     useEffect(() => {
-        if (slug) {
-            service.getPost(slug).then((post) => {
-                if (post) setPost(post);
-                else navigate("/");
-            });
-        } else navigate("/");
-    }, [slug, navigate]);
+        if(posts === null) {
+            if(slug) {
+                service.getPost(slug).then((post) => {
+                    if (post) setPost(post);
+                    else navigate("/");
+                });
+            } else navigate("/");
+        } else{
+            const singlePost = posts.find(post => post.$id === slug)
+            if(singlePost) {
+                setPost(singlePost);
+            } else{
+                if(myPosts) {
+                    const singlePost = myPosts.find(post => post.$id === slug)
+                    setPost(singlePost);
+                }
+            }
+        }
+    }, [slug, navigate, posts, myPosts]);
 
     const deletePost = () => {
         service.deletePost(post.$id).then((status) => {
             if (status) {
                 service.deleteFile(post.featuredImg);
+                if(myPosts !== null) dispatch(deleteSinglePost(post.$id))
                 navigate("/");
             }
         });

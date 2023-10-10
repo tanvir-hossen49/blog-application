@@ -38,7 +38,7 @@ const Header = () => {
 
     useEffect(() => {
         setActive(location.pathname)
-    },[])
+    },[navigate])
 
     return (
         <header className='border-b sticky top-0 z-[1000] block py-3 lg:block'>

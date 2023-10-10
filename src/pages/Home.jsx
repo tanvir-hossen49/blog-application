@@ -2,28 +2,34 @@ import { useState } from 'react';
 import service from '../appwrite/config';
 import { Container, PostCard, PostCardSkeleton } from '../components'
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPost } from '../store/postsSlice';
 
 const Home = () => {
-    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+
+    const posts = useSelector(store => store.post.posts);
 
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            setLoading(true);
-            const response = await service.getPosts();
-            if (response) {
-              setPosts(response.documents);
-            }
-          } catch (error) {
-            console.error('Error fetching posts on the home page:', error);
-          } finally {
-            setLoading(false);
-          }
-        };
-    
-        fetchData();
-    }, []);
+        if(posts === null) {
+            (async () => {
+                try {
+                  setLoading(true);
+                  const response = await service.getPosts();
+                  if (response.documents.length > 0) {
+                    dispatch(addPost(response.documents));
+                  }
+                } catch (error) {
+                  console.error('Error fetching posts on the home page:', error);
+                } finally {
+                  setLoading(false);
+                }
+            })();
+        }else{
+            setLoading(false)
+        }
+    }, [dispatch, posts]);
 
     if(loading) return <PostCardSkeleton count={3}/>
 
