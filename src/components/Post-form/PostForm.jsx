@@ -55,7 +55,7 @@ const PostForm = ({post}) => {
                 }
             } catch (error) {
                 console.log('update post: post form component error', error)
-                setError(error);
+                setError(error.message);
             } finally{
                 setLoading(false);
             }
@@ -67,12 +67,11 @@ const PostForm = ({post}) => {
                 try{
                     const fileId = file.$id;
                     data.featuredImg = fileId;
-                    const postObj = {
+                    const dbPost = await service.createPost({
                         ...data,
                         author: userData.name,
                         userId: userData.$id,
-                    }
-                    const dbPost = await service.createPost(postObj);
+                    });
 
                     if(posts !== null && dbPost) {
                         dispatch(addSinglePost(dbPost))
@@ -80,7 +79,7 @@ const PostForm = ({post}) => {
                     }
                 } catch(error) {
                     service.deleteFile(file.$id)
-                    setError(error)
+                    setError(error.message);
                 } finally{
                     setLoading(false);
                 }
