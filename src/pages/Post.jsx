@@ -72,9 +72,11 @@ const Post = () => {
                     )}
                 </div>
                 <div className="my-3 text-center text-xl font-medium">
+                 <div>
                  Author: <span className="capitalize">{post.author}</span>  | Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
                         year: 'numeric', month: 'short', day: 'numeric'
                     })}
+                 </div>
                 </div>
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
