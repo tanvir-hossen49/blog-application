@@ -50,8 +50,8 @@ const Post = () => {
 
     return post ? (
         <div className="py-8">
-            <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
+            <Container className='lg:w-2/3'>
+                <div className="w-full flex justify-center mb-4 relative rounded-xl p-2">
                     <img
                         src={service.getFilePreview(post.featuredImg)}
                         alt={post.title}

@@ -40,3 +40,18 @@ header{
     padding: 5px;
     text-align: center;
 }
+.browser-css h1{
+    font-size: 30px;
+    font-weight: 600;
+}
+.browser-css h2{
+    font-size: 24px;
+    font-weight: 600;
+}
+.browser-css h3{
+    font-size: 20px;
+    font-weight: 500;
+}
+.browser-css p{
+    font-size: 18px;
+}
