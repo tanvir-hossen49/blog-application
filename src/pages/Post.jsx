@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import service from "../appwrite/config";
-import { Button, Container } from "../components";
+import { Button, Container, PostFloatingBar } from "../components";
 import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSinglePost } from "../store/myPostsSlice";
 
 const Post = () => {
+    const divRef = useRef(null);
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const [scrolled, setScrolled] = useState(false);
+    const [blockFloatingBar, setBlockFloatingBar] =useState(false);
     const userData = useSelector((state) => state.auth.userData);
 
     const posts = useSelector(store => store.post.posts);
@@ -38,6 +41,40 @@ const Post = () => {
         }
     }, [slug, navigate, posts, myPosts]);
 
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                console.log(entry);
+              setBlockFloatingBar(true);
+              setScrolled(false);
+            }
+          });
+        });
+      
+        if (divRef.current) {
+          observer.observe(divRef.current);
+        }
+      
+        const handleScroll = () => {
+          const isScrolled = window.scrollY >= 100;
+      
+          if (isScrolled !== scrolled) {
+            setScrolled(isScrolled);
+            setBlockFloatingBar(!isScrolled);
+          }
+        };
+      
+        window.addEventListener('scroll', handleScroll);
+      
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+          if (divRef.current) {
+            observer.unobserve(divRef.current);
+          }
+        };
+      }, [scrolled]);
+
     const deletePost = () => {
         service.deletePost(post.$id).then((status) => {
             if (status) {
@@ -49,8 +86,8 @@ const Post = () => {
     };
 
     return post ? (
-        <div className="py-8">
-            <Container className='lg:w-2/3'>
+        <div className="py-8 relative">
+            <Container className='lg:w-2/3 '>
                 <div className="w-full flex justify-center mb-4 relative rounded-xl p-2">
                     <img
                         src={service.getFilePreview(post.featuredImg)}
@@ -101,9 +138,11 @@ const Post = () => {
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
-                <div className="browser-css">
+                <div className="browser-css pb-10">
                     {parse(post.content)}
                 </div>
+                <div ref={divRef}></div>
+                <PostFloatingBar scrolled={scrolled} blockFloatingBar={blockFloatingBar}/>
             </Container>
         </div>
     ) : null;

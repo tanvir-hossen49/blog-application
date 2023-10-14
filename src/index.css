@@ -31,6 +31,7 @@ body{
 header{
     background: var(--background-color);
 }
+
 .browser-css ul li{
     list-style: disc;
     margin-left: 30px;
@@ -54,4 +55,16 @@ header{
 }
 .browser-css p{
     font-size: 18px;
+}
+
+.post-floating-bar {
+    bottom: -60px;
+}
+.post-floating-bar.freeze {
+    bottom: 0 !important;
+    position: absolute!important;
+    transition: none!important;
+}
+.post-floating-bar.active {
+    bottom: 40px;
 }
