@@ -64,6 +64,7 @@ header{
     bottom: 0 !important;
     position: absolute!important;
     transition: none!important;
+    margin: 10px 0;
 }
 .post-floating-bar.active {
     bottom: 40px;
