@@ -1,30 +1,64 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Divider } from './index';
+import service from "../appwrite/config";
 
-const PostFloatingBar = ({ blockFloatingBar, scrolled }) => {
-    const ref = useRef();
+const PostFloatingBar = ({ blockFloatingBar, scrolled, like, likedBy, userId, slug  }) => {
+    const divRef = useRef();
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(like);
+    const [likesUser, setLikesUser] = useState(likedBy)
+    
+    const handleLikeUpdate = async () => {
+        if (likesUser.includes(userId)) {
+          const updatedLikesBy = likedBy.filter((likedId) => likedId !== userId);
+          try {
+            service.updateLike(slug, (likeCount - 1), updatedLikesBy);
+      
+            setLikeCount((prev) => prev - 1);
+            setLikesUser(updatedLikesBy)
+          } catch (error) {
+            console.error(error);
+          }
+        } else {
+          const updatedLikesBy = [...likedBy, userId];
+      
+          try {
+            service.updateLike(slug, (likeCount + 1), updatedLikesBy);
+      
+            setLikeCount((prev) => prev + 1);
+            setLikesUser(updatedLikesBy)
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      
+        setLiked((prev) => !prev);
+    };
+      
 
     useEffect(() => {
-        if (ref.current) {
-          ref.current.classList.remove('active', 'freeze');
-          if (blockFloatingBar) ref.current.classList.add('freeze');
-          if (scrolled) ref.current.classList.add('active');
+        if (divRef.current) {
+          divRef.current.classList.remove('active', 'freeze');
+          if (blockFloatingBar) divRef.current.classList.add('freeze');
+          if (scrolled) divRef.current.classList.add('active');
         }
-      }, [blockFloatingBar, scrolled]);
+    }, [blockFloatingBar, scrolled]);
 
     return (
-        <div ref={ref} className={`post-floating-bar fixed ${blockFloatingBar && 'freeze'}  ${scrolled && "active"} transition-all duration-300 flex left-0 right-0 z-50 h-12 w-full flex-wrap justify-center 2xl:h-14 `}>
+        <div ref={divRef} className={`post-floating-bar fixed ${blockFloatingBar && 'freeze'}  ${scrolled && "active"} transition-all duration-300 flex left-0 right-0 z-50 h-12 w-full flex-wrap justify-center 2xl:h-14 `}>
             <div className="relative mx-auto border bg-white flex h-12 shrink flex-wrap items-center justify-center rounded-full border-1/2 2xl:h-14 px-5 shadow-gray-600 shadow-sm">
                 {/* like */}
                 <div>
                     <div className="flex justify-center items-center gap-2">
-                        <button>
-                            <svg viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 stroke-current text-slate-800"><path d="M11 19C12 19 21 14.0002 21 7.00043C21 3.50057 18 1.04405 15 1.00065C13.5 0.978943 12 1.50065 11 3.00059C10 1.50065 8.47405 1.00065 7 1.00065C4 1.00065 1 3.50057 1 7.00043C1 14.0002 10 19 11 19Z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+                        <button onClick={handleLikeUpdate} title="like post">
+                            <svg viewBox="0 0 22 20" fill={`${liked ? 'red' : 'none' }`} xmlns="http://www.w3.org/2000/svg"
+                             className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 stroke-current ${liked ? 'text-red-500' : 'text-black'}`}><path d="M11 19C12 19 21 14.0002 21 7.00043C21 3.50057 18 1.04405 15 1.00065C13.5 0.978943 12 1.50065 11 3.00059C10 1.50065 8.47405 1.00065 7 1.00065C4 1.00065 1 3.50057 1 7.00043C1 14.0002 10 19 11 19Z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
                         </button>
-                        <span>1</span>
+                        <span>{likeCount}</span>
                     </div>
                 </div>
 
-                <div className="my-auto w-px bg-slate-400 mx-3 h-4"></div>
+                <Divider/>
                 {/* comment */}
                 <div>
                     <div className="flex justify-center items-center gap-2">
@@ -34,8 +68,7 @@ const PostFloatingBar = ({ blockFloatingBar, scrolled }) => {
                     </div>
                 </div>
 
-                <div  className="my-auto w-px bg-slate-400 mx-3 h-4"></div>
-
+                <Divider/>
                 {/* bookmark */}
                 <div>
                     <div className="flex justify-center items-center gap-2">
@@ -45,8 +78,7 @@ const PostFloatingBar = ({ blockFloatingBar, scrolled }) => {
                     </div>    
                 </div>
 
-                <div  className="my-auto w-px bg-slate-400 mx-3 h-4"></div>
-
+                <Divider/>
                 {/* share */}
                 <div>
                     <div className="flex justify-center items-center gap-2">

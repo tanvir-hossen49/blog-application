@@ -41,13 +41,15 @@ header{
     padding: 5px;
     text-align: center;
 }
+.browser-css h1, h2, h3{
+    font-weight: 600;
+    margin-bottom: 15px;
+}
 .browser-css h1{
     font-size: 30px;
-    font-weight: 600;
 }
 .browser-css h2{
     font-size: 24px;
-    font-weight: 600;
 }
 .browser-css h3{
     font-size: 20px;

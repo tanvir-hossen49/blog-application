@@ -33,6 +33,22 @@ export class Service {
         }
     }
 
+    async updateLike(slug, likes, likedBy ) {
+        try{
+            await this.databases.updateDocument(
+                conf.appDatabaseId, conf.appwriteCollectionId, slug,
+                { 
+                    likes,
+                    likedBy,
+                }
+            );
+
+            return true;
+        }catch(error) {
+            throw new Error(error);
+        }
+    }
+
     async deletePost(slug) {
         try{
             await this.databases.deleteDocument(

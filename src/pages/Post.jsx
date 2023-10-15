@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import service from "../appwrite/config";
-import { Button, Container, PostFloatingBar } from "../components";
+import { Button, Container, PostFloatingBar, Divider } from "../components";
 import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSinglePost } from "../store/myPostsSlice";
@@ -45,7 +45,6 @@ const Post = () => {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                console.log(entry);
               setBlockFloatingBar(true);
               setScrolled(false);
             }
@@ -57,7 +56,7 @@ const Post = () => {
         }
       
         const handleScroll = () => {
-          const isScrolled = window.scrollY >= 100;
+          const isScrolled = window.scrollY >= 50;
       
           if (isScrolled !== scrolled) {
             setScrolled(isScrolled);
@@ -73,7 +72,7 @@ const Post = () => {
             observer.unobserve(divRef.current);
           }
         };
-      }, [scrolled]);
+    }, [scrolled]);
 
     const deletePost = () => {
         service.deletePost(post.$id).then((status) => {
@@ -109,8 +108,10 @@ const Post = () => {
                     )}
                 </div>
                 <div className="my-3 text-center text-xl font-medium">
-                    <div>
-                    Author: <span className="capitalize">{post.author}</span>  | Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
+                    <div className="flex justify-center">
+                    Author: <span className="capitalize">{post.author}</span>  
+                    <Divider />
+                    Published: { new Date(post.$createdAt).toLocaleDateString('en-US', {
                             year: 'numeric', month: 'short', day: 'numeric'
                         })}
                     </div> 
@@ -142,7 +143,14 @@ const Post = () => {
                     {parse(post.content)}
                 </div>
                 <div ref={divRef}></div>
-                <PostFloatingBar scrolled={scrolled} blockFloatingBar={blockFloatingBar}/>
+                <PostFloatingBar
+                    slug={slug}
+                    userId={userData.$id}
+                    likedBy={post.likedBy} 
+                    like={post.likes} 
+                    scrolled={scrolled} 
+                    blockFloatingBar={blockFloatingBar}
+                />
             </Container>
         </div>
     ) : null;
