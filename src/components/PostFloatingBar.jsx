@@ -9,6 +9,9 @@ const PostFloatingBar = ({ blockFloatingBar, scrolled, like, likedBy, userId, sl
     const [likesUser, setLikesUser] = useState(likedBy)
     
     const handleLikeUpdate = async () => {
+        // TODO: use react testify 
+        if(!userId) return alert('log in first');
+
         if (likesUser.includes(userId)) {
           const updatedLikesBy = likedBy.filter((likedId) => likedId !== userId);
           try {

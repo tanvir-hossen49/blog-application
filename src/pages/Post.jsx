@@ -145,7 +145,7 @@ const Post = () => {
                 <div ref={divRef}></div>
                 <PostFloatingBar
                     slug={slug}
-                    userId={userData.$id}
+                    userId={userData?.$id}
                     likedBy={post.likedBy} 
                     like={post.likes} 
                     scrolled={scrolled} 
