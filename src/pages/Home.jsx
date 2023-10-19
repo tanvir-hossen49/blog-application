@@ -9,7 +9,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
 
-    const posts = useSelector(store => store.post.posts);
+    const { posts, searchData } = useSelector(store => store.post);
 
     useEffect(() => {
         if(posts === null) {
@@ -51,7 +51,12 @@ const Home = () => {
         <div className='w-full py-8'>
             <Container>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-3 '>
-                    {posts?.map((post) => (
+                    { posts &&
+                        posts.filter(post => {
+                        if(searchData.length === 0) return post;
+                        return post.title.toLowerCase().includes(searchData.toLowerCase()) 
+                    })
+                    .map((post) => (
                         <PostCard key={post.$id} {...post} />
                     ))}
                 </div>

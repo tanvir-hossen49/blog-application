@@ -80,6 +80,20 @@ export class Service {
         }
     }
 
+    async getSearchedPosts(searchedText) {
+        try {
+            const response = await this.databases.listDocuments(
+                conf.appDatabaseId, conf.appwriteCollectionId, 
+                [ Query.search('title', searchedText) ]
+            );
+        
+            return response;
+        } catch (error) {
+            console.error('Error fetching blog posts:', error);
+            throw new Error(error);
+        }
+    }
+
     // file services
     async uploadFile(file) {
         try{

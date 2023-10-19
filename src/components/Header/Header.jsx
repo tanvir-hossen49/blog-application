@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import {Container, Logo, LogoutBtn} from '../index';
+import {Container, Logo, LogoutBtn, SearchBox} from '../index';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SideNav from "./SideNav";
@@ -29,6 +29,11 @@ const Header = () => {
                     </div>
 
                     <div className="flex gap-x-2 ml-auto md:m-0 items-center text-right">
+                        {/* search button */}
+                        <div>
+                            <SearchBox />
+                        </div>
+
                         <div>
                             {
                                 authStatus ? <LogoutBtn /> : (
@@ -44,15 +49,14 @@ const Header = () => {
                             }
                         </div>
 
-                        
                     </div>
                 </nav>
             </Container>
             {
-                isOpen && (<>
+                isOpen ? (<>
                     <div onClick={handleNav} className="fixed bg-black opacity-60 top-0 bottom-0 left-0 right-0 z-40 "></div>
                     <SideNav setIsOpen={setIsOpen} authStatus={authStatus}/>
-                </>)
+                </>) : null
             }
         </header>
     );

@@ -47,7 +47,7 @@ const Post = () => {
             if (entry.isIntersecting) {
               setBlockFloatingBar(true);
               setScrolled(false);
-            }
+            } 
           });
         });
       
@@ -119,11 +119,13 @@ const Post = () => {
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
-                <div className="browser-css pb-10">
+                <div className="browser-css pb-24">
                     {parse(post.content)}
                 </div>
+                
                 <div ref={divRef}></div>
-                <div className="relative">
+
+                <div className="relative mt-8">
                     <PostFloatingBar
                         slug={slug}
                         userId={userData?.$id}
