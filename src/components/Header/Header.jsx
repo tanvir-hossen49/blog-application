@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import {Container, Logo, LogoutBtn, SearchBox} from '../index';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SideNav from "./SideNav";
 import BackHomeBtn from "./BackHomeBtn";
@@ -8,7 +8,8 @@ import BackHomeBtn from "./BackHomeBtn";
 const Header = () => {
     const navigate = useNavigate();
     const authStatus = useSelector(state => state.auth.status);
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
     
     const handleNav = () => {
         setIsOpen(prev => !prev)
@@ -17,7 +18,7 @@ const Header = () => {
     return (
         <header className='border-b sticky top-0 z-[1000] block py-3 lg:block'>
             <Container>
-                <nav className='flex justify-between items-center'>
+                <nav className='flex flex-wrap gap-2 justify-between items-center'>
                     <div className="flex items-center gap-2">
                         <BackHomeBtn />
                         <div>
@@ -28,11 +29,13 @@ const Header = () => {
                         </Link>
                     </div>
 
-                    <div className="flex gap-x-2 ml-auto md:m-0 items-center text-right">
+                    <div className="flex flex-wrap gap-2 md:ml-auto md:m-0 items-center text-right">
                         {/* search button */}
-                        <div>
-                            <SearchBox />
-                        </div>
+                        {
+                            location.pathname === '/' || location.pathname === '/my-post' ? <div>
+                                <SearchBox />
+                            </div> : null
+                        }
 
                         <div>
                             {
