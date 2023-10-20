@@ -32,7 +32,7 @@ const Header = () => {
                     <div className="flex flex-wrap gap-2 md:ml-auto md:m-0 items-center text-right">
                         {/* search button */}
                         {
-                            location.pathname === '/' || location.pathname === '/my-post' ? <div>
+                            location.pathname === '/' ? <div>
                                 <SearchBox />
                             </div> : null
                         }

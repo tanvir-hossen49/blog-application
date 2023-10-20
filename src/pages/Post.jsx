@@ -131,7 +131,8 @@ const Post = () => {
                         userId={userData?.$id}
                         likedBy={post.likedBy} 
                         like={post.likes} 
-                        scrolled={scrolled} 
+                        scrolled={scrolled}
+                        posts={posts !== null ? post : null} 
                         blockFloatingBar={blockFloatingBar}
                     />
                 </div>

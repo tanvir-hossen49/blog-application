@@ -1,64 +1,69 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Divider, SharePost } from './index';
 import service from "../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { showAlertMessage } from "../utilities/AlertMessage";
+import { useDispatch } from "react-redux";
+import { updateLikes } from "../store/postsSlice";
 
-const PostFloatingBar = ({ blockFloatingBar, scrolled, like, likedBy, userId, slug  }) => {
+const PostFloatingBar = ({ blockFloatingBar, scrolled, like, likedBy, userId, slug, posts  }) => {
     const divRef = useRef();
-    const [liked, setLiked] = useState(likedBy.includes(userId));
+    // check this user already liked or not
+    const [liked, setLiked] = useState(likedBy.includes(userId) || posts && posts.likedBy.includes(useId));
     const [likesUser, setLikesUser] = useState(likedBy);
     const [likeCount, setLikeCount] = useState(like);
     const [isOpenShare, setIsOpenShare] = useState(false);
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    
     const handleLikeUpdate = async () => {
-        if(!userId) {
+        if (!userId) {
             showAlertMessage({
                 title: 'Oops!',
                 text: "Can't like without logging in.",
                 confirmButtonText: 'Yes, Login'
             }).then((result) => {
                 if (result.isConfirmed) {
-                  navigate('/login');
+                    navigate('/login');
                 }
-            })
-
-        return;
+            });
+    
+            return;
         }
-
-        if (likesUser.includes(userId)) {
-          const updatedLikesBy = likedBy.filter((likedId) => likedId !== userId);
-
-            showAlertMessage({
-                title: 'Are you sure!',
-                text: "You want to unlike this post.",
-                confirmButtonText: 'Unlike'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    try {
-                        service.updateLike(slug, (likeCount - 1), updatedLikesBy);
-                        setLikeCount((prev) => prev - 1);
-                        setLikesUser(updatedLikesBy);
-                        setLiked((prev) => !prev);
-                    } catch (error) {
-                        console.error(error);
+    
+        const isUserLiked = likesUser.includes(userId);
+        const updatedLikesBy = isUserLiked ? likedBy.filter((likedId) => likedId !== userId) : [...likedBy, userId];
+        const updatedLikeCount = isUserLiked ? likeCount - 1 : likeCount + 1;
+    
+        const confirmationTitle = isUserLiked ? 'Are you sure!' : 'Like this post?';
+        const confirmationText = isUserLiked ? 'You want to unlike this post.' : 'You want to like this post.';
+    
+        showAlertMessage({
+            title: confirmationTitle,
+            text: confirmationText,
+            confirmButtonText: isUserLiked ? 'Unlike' : 'Like'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                try {
+                    service.updateLike(slug, updatedLikeCount, updatedLikesBy);
+    
+                    // If this blog is already stored in redux
+                    if (posts !== null) {
+                        dispatch(updateLikes({
+                            articleId: slug,
+                            newLikes: updatedLikeCount,
+                            likedBy: updatedLikesBy
+                        }));
                     }
+    
+                    setLikeCount(updatedLikeCount);
+                    setLikesUser(updatedLikesBy);
+                    setLiked((prev) => !prev);
+                } catch (error) {
+                    console.error(error);
                 }
-            })
-        } else {
-          const updatedLikesBy = [...likedBy, userId];
-      
-          try {
-            service.updateLike(slug, (likeCount + 1), updatedLikesBy);
-      
-            setLikeCount((prev) => prev + 1);
-            setLikesUser(updatedLikesBy);
-            setLiked((prev) => !prev);
-          } catch (error) {
-            console.error(error);
-          }
-        }
+            }
+        });
     };
     
     useEffect(() => {
