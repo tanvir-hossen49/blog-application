@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Divider, SharePost } from './index';
 import service from "../appwrite/config";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { showAlertMessage } from "../utilities/AlertMessage";
 import { useDispatch } from "react-redux";
 import { updateLikes } from "../store/postsSlice";
 
-const PostFloatingBar = ({ blockFloatingBar, scrolled, like, likedBy, userId, slug, posts  }) => {
+const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
     const divRef = useRef();
     // check this user already liked or not
     const [liked, setLiked] = useState(likedBy.includes(userId) || posts && posts.likedBy.includes(useId));
@@ -65,19 +65,9 @@ const PostFloatingBar = ({ blockFloatingBar, scrolled, like, likedBy, userId, sl
             }
         });
     };
-    
-    useEffect(() => {
-        if (divRef.current) {
-
-          divRef.current.classList.remove('active', 'freeze');
-          
-          if (blockFloatingBar) divRef.current.classList.add('freeze');
-          if (scrolled) divRef.current.classList.add('active');
-        }
-    }, [blockFloatingBar, scrolled]);
 
     return (
-        <div ref={divRef} className={`post-floating-bar fixed ${blockFloatingBar && 'freeze'}  ${scrolled && "active"} transition-all duration-300 flex left-0 right-0 z-50 h-12 w-full flex-wrap justify-center 2xl:h-14 `}>
+        <div ref={divRef} className={`post-floating-bar fixed ${barState} transition-all duration-300 flex left-0 right-0 z-50 h-12 w-full flex-wrap justify-center 2xl:h-14 `}>
             <div className="relative mx-auto border bg-white flex h-12 shrink flex-wrap items-center justify-center rounded-full border-1/2 2xl:h-14 px-5 shadow-gray-600 shadow-sm">
                 {/* like */}
                 <div>

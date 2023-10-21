@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import service from "../appwrite/config";
 import { Button, Container, PostFloatingBar, Divider } from "../components";
@@ -7,13 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteSinglePost } from "../store/myPostsSlice";
 
 const Post = () => {
-    const divRef = useRef(null);
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [scrolled, setScrolled] = useState(false);
-    const [blockFloatingBar, setBlockFloatingBar] =useState(false);
+    const [barState, setBarState] = useState('default');
     const userData = useSelector((state) => state.auth.userData);
 
     const posts = useSelector(store => store.post.posts);
@@ -21,58 +19,61 @@ const Post = () => {
     const isAuthor = post && userData ? post.userId === userData.$id : false;
 
     useEffect(() => {
-        if(posts === null) {
-            if(slug) {
-                service.getPost(slug).then((post) => {
-                    if (post) setPost(post);
-                    else navigate("/");
-                });
-            } else navigate("/");
-        } else{
-            const singlePost = posts.find(post => post.$id === slug)
-            if(singlePost) {
-                setPost(singlePost);
-            } else{
-                if(myPosts) {
-                    const singlePost = myPosts.find(post => post.$id === slug)
-                    setPost(singlePost);
-                }
+        const loadPost = async () => {
+
+          if (posts === null) {
+            try {
+              const post = await service.getPost(slug);
+              if (post) {
+                setPost(post);
+              } else {
+                navigate('/');
+              }
+            } catch (error) {
+              console.error(error);
             }
+          } else {
+            const singlePost = posts.find((p) => p.$id === slug) || myPosts?.find((p) => p.$id === slug);
+            if (singlePost) {
+              setPost(singlePost);
+            }
+          }
+        };
+    
+        if (!slug) {
+          navigate('/');
+        } else {
+          loadPost();
         }
-    }, [slug, navigate, posts, myPosts]);
+      }, [slug, navigate, posts, myPosts]);
 
     useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setBlockFloatingBar(true);
-              setScrolled(false);
-            } 
-          });
-        });
-      
-        if (divRef.current) {
-          observer.observe(divRef.current);
-        }
-      
-        const handleScroll = () => {
-          const isScrolled = window.scrollY >= 50;
-      
-          if (isScrolled !== scrolled) {
-            setScrolled(isScrolled);
-            setBlockFloatingBar(!isScrolled);
-          }
-        };
-      
-        window.addEventListener('scroll', handleScroll);
-      
-        return () => {
-          window.removeEventListener('scroll', handleScroll);
-          if (divRef.current) {
-            observer.unobserve(divRef.current);
-          }
-        };
-    }, [scrolled]);
+    const handleScroll = () => {
+      const contentDiv = document.querySelector('.browser-css');
+      const likeDiv = document.querySelector('.floating-div');
+
+      if (!contentDiv || !likeDiv) return;
+
+      const contentBottom = contentDiv.getBoundingClientRect().bottom;
+
+      const isAtBottom = contentBottom <= window.innerHeight;
+      console.log(window.innerHeight, contentBottom);
+
+      if (isAtBottom) {
+        setBarState('freeze');
+      } else if (window.scrollY > 30) {
+        setBarState('active');
+      } else {
+        setBarState('default');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+    }, []);
 
     const deletePost = () => {
         service.deletePost(post.$id).then((status) => {
@@ -122,18 +123,15 @@ const Post = () => {
                 <div className="browser-css pb-24">
                     {parse(post.content)}
                 </div>
-                
-                <div ref={divRef}></div>
 
-                <div className="relative mt-8">
+                <div className="relative mt-8 floating-div">
                     <PostFloatingBar
                         slug={slug}
                         userId={userData?.$id}
                         likedBy={post.likedBy} 
                         like={post.likes} 
-                        scrolled={scrolled}
+                        barState={barState}
                         posts={posts !== null ? post : null} 
-                        blockFloatingBar={blockFloatingBar}
                     />
                 </div>
             </Container>
