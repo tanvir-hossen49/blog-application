@@ -57,7 +57,6 @@ const Post = () => {
       const contentBottom = contentDiv.getBoundingClientRect().bottom;
 
       const isAtBottom = contentBottom <= window.innerHeight;
-      console.log(window.innerHeight, contentBottom);
 
       if (isAtBottom) {
         setBarState('freeze');
@@ -86,7 +85,7 @@ const Post = () => {
     };
 
     return post ? (
-        <div className="py-8 relative">
+        <div className="py-8">
             <Container className='lg:w-2/3 '>
                 <div className="w-full flex justify-center mb-4 relative rounded-xl p-2">
                     <img
@@ -136,6 +135,7 @@ const Post = () => {
                 </div>
             </Container>
         </div>
+
     ) : null;
 }
 

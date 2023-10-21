@@ -34,7 +34,7 @@ const SideNav = ({setIsOpen, authStatus}) => {
     },[navigate])
 
     return (
-        <div className="fixed top-0 bottom-0 left-0 z-50 flex w-80 transform flex-col bg-white text-black shadow-2xl duration-300 ease-out translate-x-0 py-4">
+        <div className="fixed top-0 bottom-0 left-0 z-50 flex w-80 flex-col bg-white text-black shadow-2xl py-4">
             <div className="flex pl-8 pr-4 justify-between gap-3 items-center">
                 <Link to='/'>
                     <Logo />
@@ -46,6 +46,7 @@ const SideNav = ({setIsOpen, authStatus}) => {
                     </button>
                 </div>
             </div>
+            
             <div className="min-w-full table  ">
                 <div className="py-10 pl-8 pr-4">
                     <div className="mx-auto ">

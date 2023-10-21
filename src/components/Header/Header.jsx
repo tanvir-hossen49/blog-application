@@ -16,7 +16,7 @@ const Header = () => {
     }
 
     return (
-        <header className='border-b sticky top-0 z-[1000] block py-3 lg:block'>
+        <header className='border-b sticky top-0 z-[55] block py-3 lg:block'>
             <Container>
                 <nav className='flex flex-wrap gap-2 justify-between items-center'>
                     <div className="flex items-center gap-2">

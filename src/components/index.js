@@ -17,9 +17,10 @@ import PostFloatingBar from "./PostFloatingBar";
 import Divider from "./Divider";
 import SharePost from "./SharePost";
 import SearchBox from "./SearchBox";
+import Comment from "./Comment/Comment";
 
 export {
     Header, Footer, Container, Input, Button, LogoutBtn, Select, PostCard,
     Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm, PostCardSkeleton,
-    PostFloatingBar, Divider, SharePost, SearchBox
+    PostFloatingBar, Divider, SharePost, SearchBox, Comment
 };
