@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from '../App'
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Signup from '../pages/Signup';
-import AddPost from '../pages/AddPost';
-import Post from '../pages/Post';
-import EditPost from '../pages/EditPost';
-import { AuthLayout } from '../components';
-import MyPost from "../pages/MyPost";
-import About from "../pages/About";
+import { lazy, Suspense } from 'react';
+import App from '../App';
+import { AuthLayout, Loader } from '../components';
+const Home = lazy(() => import('../pages/Home'));
+const Login = lazy(() => import('../pages/Login'));
+const Signup = lazy(() => import('../pages/Signup'));
+const AddPost = lazy(() => import('../pages/AddPost'));
+const Post = lazy(() => import('../pages/Post'));
+const EditPost = lazy(() => import('../pages/EditPost'));
+const MyPost = lazy(() => import('../pages/MyPost'));
+const About = lazy(() => import('../pages/About'));
 
 export const router = createBrowserRouter([
     {
@@ -17,13 +18,17 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Home />
+                element:  <Suspense fallback={<Loader />}>
+                    <Home />    
+                </Suspense>
             },
             {
                 path: '/login',
                 element: (
                     <AuthLayout authentication={false}>
-                        <Login />
+                        <Suspense fallback={<Loader />}>
+                            <Login />
+                        </Suspense>   
                     </AuthLayout>
                 )
             },
@@ -31,7 +36,9 @@ export const router = createBrowserRouter([
                 path:'/signup',
                 element: (
                     <AuthLayout authentication={false}>
-                        <Signup />
+                        <Suspense fallback={<Loader />}>
+                            <Signup />
+                        </Suspense>    
                     </AuthLayout>
                 )
             },
@@ -39,19 +46,25 @@ export const router = createBrowserRouter([
                 path: '/add-post',
                 element: (
                     <AuthLayout authentication>
-                        <AddPost />
+                        <Suspense fallback={<Loader />}>
+                            <AddPost />
+                        </Suspense>
                     </AuthLayout>
                 )
             },
             {
                 path: '/post/:slug',
-                element: <Post />
+                element: <Suspense fallback={<Loader />}>
+                    <Post />
+                </Suspense>
             },
             {
                 path: '/edit-post/:slug',
                 element:(
                     <AuthLayout authentication>
-                        <EditPost />
+                        <Suspense fallback={<Loader />}>
+                            <EditPost />
+                        </Suspense>
                     </AuthLayout>
                 )
             }, 
@@ -59,12 +72,16 @@ export const router = createBrowserRouter([
                 path: '/my-posts',
                 element: (
                     <AuthLayout authentication>
-                        <MyPost/>
+                        <Suspense fallback={<Loader />}>
+                            <MyPost/>
+                        </Suspense>
                     </AuthLayout>
                 )
             },{
                 path: '/about',
-                element: <About />
+                element: <Suspense fallback={<Loader />}>
+                    <About />
+                </Suspense>
             }
         ]
     }

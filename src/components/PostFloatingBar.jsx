@@ -27,7 +27,6 @@ const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
                     navigate('/login');
                 }
             });
-    
             return;
         }
     
@@ -42,10 +41,10 @@ const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
             title: confirmationTitle,
             text: confirmationText,
             confirmButtonText: isUserLiked ? 'Unlike' : 'Like'
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    service.updateLike(slug, updatedLikeCount, updatedLikesBy);
+                    await service.updateLike(slug, updatedLikeCount, updatedLikesBy);
     
                     // If this blog is already stored in redux
                     if (posts !== null) {
