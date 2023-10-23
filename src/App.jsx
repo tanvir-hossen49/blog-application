@@ -15,15 +15,15 @@ function App() {
   useEffect(() => {
     authService.getCurrentUser().then(userData => {
       if(userData) {
-        config.getAuthor(userData.$id).then(author => {
-          console.log(author);
-          if(author) {
-            const {isVerified, image, facebookLink, linkedinLink, role} = author;
-            dispatch(login({...userData, isVerified, image, facebookLink, linkedinLink, role}))
-          } else {
-            dispatch(login(userData))
-          }
-        })
+        // config.getAuthor(userData.$id).then(author => {
+        //   if(author) {
+        //     const {isVerified, image, facebookLink, linkedinLink, role} = author;
+        //     dispatch(login({...userData, isVerified, image, facebookLink, linkedinLink, role}))
+        //   } else {
+        //     dispatch(login(userData))
+        //   }
+        dispatch(login(userData))
+        
       } else{
         dispatch(logout());
       }
