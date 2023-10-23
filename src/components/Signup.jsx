@@ -5,23 +5,37 @@ import { useForm } from 'react-hook-form';
 import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
+import config from '../appwrite/config'
 
 const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isBecomeAuthor, setIsBecomeAuthor] = useState(false);
     const {register, handleSubmit} = useForm(); 
     const [error, setError] = useState('');
 
     const signup = async (data) => {
         setError('');
-
         try{
-            const userData = await authService.createAccount(data);
+            const { name, email, password, image, facebookLink, linkedinLink } = data;
+
+            await authService.createAccount({name, email, password});
+            const userData = await authService.getCurrentUser();
+
             if(userData) {
-                const userData = await authService.getCurrentUser();
-                if(userData) dispatch(login(userData));
-                navigate('/');
+                if(isBecomeAuthor) {
+                    const userId = userData.$id;
+                    const responseAuthor = await config.createAuthor(
+                        { image, facebookLink, linkedinLink, userId }
+                    );
+
+                    const { isVerified, role } = responseAuthor;
+                    if(responseAuthor)  dispatch(login(userData, { isVerified, image, facebookLink, linkedinLink, role }));
+                }
+                else dispatch(login(userData));
             }
+            navigate('/');
+
         } catch(error) { setError(error.message) }
     }
 
@@ -57,6 +71,52 @@ const Signup = () => {
                                 minLength: 3
                             })}
                         />
+
+                        {/* become an author */}
+                        <div className="flex gap-3 items-center">
+                            <div className='mb-1 pl-1'>
+                                Become an author:
+                            </div>
+                            <div className="flex gap-8">
+                                <div className="flex items-center">
+                                    <label htmlFor="yes">Yes</label>
+                                    <input onClick={() => setIsBecomeAuthor(true)} name='author' type="radio" id="yes" className="ml-2"/>
+                                </div>
+                                <div className="flex items-center">
+                                    <label htmlFor="no">No</label>
+                                    <input onClick={() => setIsBecomeAuthor(false)} name='author' type="radio" id="no" className="ml-2"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        {
+                          isBecomeAuthor ?  <>
+                                <Input 
+                                    label="Image:" 
+                                    placeholder='Enter your profile image' 
+                                    type='url' 
+                                    required
+                                    {...register('image')}
+                                />
+
+                                <Input 
+                                    label="Facebook Profile:" 
+                                    placeholder='Enter your facebook profile link' 
+                                    type='url' 
+                                    required
+                                    {...register('facebookLink')}
+                                />
+
+                                <Input 
+                                    label="Linkedin Profile:" 
+                                    placeholder='Enter your linkedin profile link' 
+                                    type='url' 
+                                    required
+                                    {...register('linkedinLink')}
+                                />
+                            </>
+                          : null
+                        }   
 
                         <Input
                             label='Email: '

@@ -22,6 +22,27 @@ export class Service {
         }
     }
 
+    async createAuthor({ userId, image, facebookLink, linkedinLink }) {
+        try{
+            return await this.databases.createDocument(
+                conf.appDatabaseId, conf.appwriteAuthorCollectionId, userId,
+                { image, facebookLink, linkedinLink }
+            );
+        }catch(error) {
+            throw new Error(error);
+        }
+    }
+
+    async getAuthor(userId) {
+        try{
+            return await this.databases.getDocument(
+                conf.appDatabaseId, conf.appwriteAuthorCollectionId, userId
+            );
+        }catch(error) {
+            throw new Error(error);
+        }
+    }
+
     async updatePost(slug, { title, content, status, featuredImg}) {
         try{
             return await this.databases.updateDocument(

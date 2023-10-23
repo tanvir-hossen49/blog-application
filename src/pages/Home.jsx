@@ -50,6 +50,9 @@ const Home = () => {
     return (
         <div className='w-full py-8'>
             <Container>
+                {/* tab */}
+                {/* <Categories /> */}
+                {/* blogs */}
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-3 '>
                     { posts &&
                         posts.filter(post => {

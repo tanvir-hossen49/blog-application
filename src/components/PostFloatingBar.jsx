@@ -76,12 +76,11 @@ const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
                     navigate('/login');
                 }
             });
-    
             return;
         }
 
         setIsOpenCommentBox(prev => !prev)
-    }
+    };
 
     return (
         <>

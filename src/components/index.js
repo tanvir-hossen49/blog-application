@@ -19,9 +19,12 @@ import SharePost from "./SharePost";
 import SearchBox from "./SearchBox";
 import Comment from "./Comment/Comment";
 import Loader from "./Loader";
+import Categories from "./Categories/Categories";
+import BecomeAnAuthor from "./BecomeAnAuthor";
 
 export {
     Header, Footer, Container, Input, Button, LogoutBtn, Select, PostCard,
     Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm, PostCardSkeleton,
-    PostFloatingBar, Divider, SharePost, SearchBox, Comment, Loader
+    PostFloatingBar, Divider, SharePost, SearchBox, Comment, Loader, Categories,
+    BecomeAnAuthor
 };

@@ -3,6 +3,7 @@ import './App.css';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import authService from './appwrite/auth.js';
+import config from './appwrite/config'
 import { login, logout } from './store/authSlice';
 import {Header, Footer} from './components/index';
 import { Outlet } from 'react-router-dom';
@@ -14,7 +15,15 @@ function App() {
   useEffect(() => {
     authService.getCurrentUser().then(userData => {
       if(userData) {
-        dispatch(login(userData))
+        config.getAuthor(userData.$id).then(author => {
+          console.log(author);
+          if(author) {
+            const {isVerified, image, facebookLink, linkedinLink, role} = author;
+            dispatch(login({...userData, isVerified, image, facebookLink, linkedinLink, role}))
+          } else {
+            dispatch(login(userData))
+          }
+        })
       } else{
         dispatch(logout());
       }
