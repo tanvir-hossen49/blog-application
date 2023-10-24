@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const options = [
     { label: 'Male', value: 'male' },
@@ -16,7 +17,8 @@ const BecomeAuthorForm = () => {
     const {register, handleSubmit} = useForm(); 
     const userData = useSelector(state => state.auth.userData);
     const [selectedOption, setSelectedOption] = useState(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const handleSelect = ({value}) => {
         setSelectedOption(value);
@@ -35,17 +37,23 @@ const BecomeAuthorForm = () => {
         try{
             const userId = userData?.$id;
             const responseAuthor = await config.createAuthor({...data, userId, gender: selectedOption});
-
+            
             const { isVerified, role } = responseAuthor;
 
             if(responseAuthor)  dispatch(login(userData, { ...data, isVerified, role,  gender: selectedOption }));
+
+            navigate('/add-post');
         }catch(error) {
             console.log(error);
         }
     }
 
     if(userData?.role === 'author' && userData?.isVerified) {
-        return <h1>Your already is an author</h1>
+        return <div className='py-8'>
+            <Container>
+            <h1>Your already is an author</h1>
+            </Container>
+        </div>
     }
 
     return userData?.role === 'author' && userData?.isVerified === false ? (
@@ -101,7 +109,7 @@ const BecomeAuthorForm = () => {
                         </div>
                     </div>
 
-                    <div className='w-full mt-5 text-center mx-auto'>
+                    <div className='w-full mb-5 text-center mx-auto'>
                         <Button className='lg:w-auto w-full' type="submit">Submit</Button>
                     </div>
                 </form>

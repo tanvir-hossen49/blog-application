@@ -26,7 +26,6 @@ const Signup = () => {
         setSelectedOption(value);
     };
 
-
     const signup = async (data) => {
         if(!selectedOption) {
             Swal.fire('Ooop! You can not select gender')
@@ -58,7 +57,6 @@ const Signup = () => {
                 else dispatch(login(userData));
             }
             navigate('/');
-
         } catch(error) { setError(error.message) }
     }
 
