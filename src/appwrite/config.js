@@ -22,11 +22,11 @@ export class Service {
         }
     }
 
-    async createAuthor({ userId, image, facebookLink, linkedinLink }) {
+    async createAuthor({ userId, image, facebookLink, linkedinLink, gender, bio }) {
         try{
             return await this.databases.createDocument(
                 conf.appDatabaseId, conf.appwriteAuthorCollectionId, userId,
-                { image, facebookLink, linkedinLink }
+                { image, facebookLink, linkedinLink, gender, bio }
             );
         }catch(error) {
             throw new Error(error);
@@ -34,12 +34,13 @@ export class Service {
     }
 
     async getAuthor(userId) {
+        console.log(userId);
         try{
             return await this.databases.getDocument(
                 conf.appDatabaseId, conf.appwriteAuthorCollectionId, userId
             );
         }catch(error) {
-            throw new Error(error);
+            console.log('get author :: error ::', 'author not found')
         }
     }
 

@@ -1,18 +1,22 @@
 import { useForm } from 'react-hook-form';
+import config from '../appwrite/config'
 import { Button, Container, Dropdown, Input, TextArea } from './index'
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../store/authSlice';
 
 const options = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'female' },
     { label: 'Others', value: 'others' },
-  ];
+];
 
 const BecomeAuthorForm = () => {
     const {register, handleSubmit} = useForm(); 
-
+    const userData = useSelector(state => state.auth.userData);
     const [selectedOption, setSelectedOption] = useState(null);
+    const dispatch = useDispatch()
 
     const handleSelect = ({value}) => {
         setSelectedOption(value);
@@ -27,13 +31,32 @@ const BecomeAuthorForm = () => {
             Swal.fire('Your bio data should be less than 500 char.')
             return;
         }
-        console.log(data, selectedOption);
+        
+        try{
+            const userId = userData?.$id;
+            const responseAuthor = await config.createAuthor({...data, userId, gender: selectedOption});
+
+            const { isVerified, role } = responseAuthor;
+
+            if(responseAuthor)  dispatch(login(userData, { ...data, isVerified, role,  gender: selectedOption }));
+        }catch(error) {
+            console.log(error);
+        }
     }
 
-    return (
+    if(userData?.role === 'author' && userData?.isVerified) {
+        return <h1>Your already is an author</h1>
+    }
+
+    return userData?.role === 'author' && userData?.isVerified === false ? (
         <div className='py-8'>
-            
-                <Container>
+            <Container>
+                <h1>Your application in pending</h1>
+            </Container>
+        </div>
+    ) :  (
+        <div className='py-8'>
+            <Container>
                 <h2 className='text-2xl font-medium '>Fill this form: </h2>
 
                 <form onSubmit={handleSubmit(submit)} >

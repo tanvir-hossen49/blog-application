@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Button, Input, Logo } from './index';
+import { Button, Dropdown, Input, Logo, TextArea } from './index';
 import { useForm } from 'react-hook-form';
 import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
 import config from '../appwrite/config'
+import Swal from "sweetalert2";
+
+const options = [
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
+    { label: 'Others', value: 'others' },
+];
 
 const Signup = () => {
     const dispatch = useDispatch();
@@ -13,11 +20,27 @@ const Signup = () => {
     const [isBecomeAuthor, setIsBecomeAuthor] = useState(false);
     const {register, handleSubmit} = useForm(); 
     const [error, setError] = useState('');
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const handleSelect = ({ value }) => {
+        setSelectedOption(value);
+    };
+
 
     const signup = async (data) => {
+        if(!selectedOption) {
+            Swal.fire('Ooop! You can not select gender')
+            return;
+        }
+        if(data.bio.length > 500) {
+            Swal.fire('Your bio data should be less than 500 char.')
+            return;
+        }
+
         setError('');
+
         try{
-            const { name, email, password, image, facebookLink, linkedinLink } = data;
+            const { name, email, password, image, facebookLink, linkedinLink, gender, bio } = data;
 
             await authService.createAccount({name, email, password});
             const userData = await authService.getCurrentUser();
@@ -26,11 +49,11 @@ const Signup = () => {
                 if(isBecomeAuthor) {
                     const userId = userData.$id;
                     const responseAuthor = await config.createAuthor(
-                        { image, facebookLink, linkedinLink, userId }
+                        { image, facebookLink, linkedinLink, userId, gender, bio }
                     );
 
                     const { isVerified, role } = responseAuthor;
-                    if(responseAuthor)  dispatch(login(userData, { isVerified, image, facebookLink, linkedinLink, role }));
+                    if(responseAuthor)  dispatch(login(userData, { isVerified, image, facebookLink, linkedinLink, role, bio, gender }));
                 }
                 else dispatch(login(userData));
             }
@@ -114,6 +137,21 @@ const Signup = () => {
                                     required
                                     {...register('linkedinLink')}
                                 />
+
+                                <div className='flex gap-2'>
+                                    Gender: <Dropdown options={options} onSelect={handleSelect} />
+                                </div>
+
+                                <div className='lg:col-span-2 md:col-span-full'>
+                                    <TextArea 
+                                    label='About yourself:'
+                                    placeholder='Tell me About yourself' 
+                                    type='url' 
+                                    rows='5'
+                                    required
+                                    {...register('bio')}
+                                    />
+                                </div>
                             </>
                           : null
                         }   
