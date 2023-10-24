@@ -21,10 +21,13 @@ import Comment from "./Comment/Comment";
 import Loader from "./Loader";
 import Categories from "./Categories/Categories";
 import BecomeAnAuthor from "./BecomeAnAuthor";
+import BecomeAuthorForm from "./BecomeAuthorForm";
+import Dropdown from "./DropDownMenu";
+import TextArea from "./TextArea";
 
 export {
     Header, Footer, Container, Input, Button, LogoutBtn, Select, PostCard,
     Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm, PostCardSkeleton,
     PostFloatingBar, Divider, SharePost, SearchBox, Comment, Loader, Categories,
-    BecomeAnAuthor
+    BecomeAnAuthor, BecomeAuthorForm, Dropdown, TextArea
 };

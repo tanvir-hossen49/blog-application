@@ -1,10 +1,10 @@
-import { BecomeAnAuthor } from "../components";
+import { BecomeAnAuthor, Container } from "../components";
 
 const BecomeAuthor = () => {
     return (
-        <div>
+        <Container>
             <BecomeAnAuthor />
-        </div>
+        </Container>
     );
 };
 

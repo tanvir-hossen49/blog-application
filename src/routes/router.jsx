@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { lazy, Suspense } from 'react';
 import App from '../App';
-import { AuthLayout, Loader } from '../components';
+import { AuthLayout, BecomeAuthorForm, Loader } from '../components';
 
 const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
@@ -86,6 +86,16 @@ export const router = createBrowserRouter([
                     <Suspense fallback={<Loader />}>
                         <BecomeAuthor />
                     </Suspense>
+                )
+            },
+            {
+                path: '/become-author-form',
+                element: (
+                    <AuthLayout authentication>
+                        <Suspense fallback={<Loader />}>
+                            <BecomeAuthorForm />
+                        </Suspense>
+                    </AuthLayout> 
                 )
             },
             {

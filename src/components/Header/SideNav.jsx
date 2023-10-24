@@ -23,6 +23,11 @@ const SideNav = ({setIsOpen, authStatus}) => {
             active: authStatus,
         },
         {
+            name: "Become An Author",
+            slug: "/become-an-author",
+            active: true,
+        },
+        {
             name: 'About',
             slug: "/about",
             active: true
