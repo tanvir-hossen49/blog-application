@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Button, Dropdown, Input, Logo, TextArea } from './index';
+import { AlertMessage, Button, Dropdown, Input, Logo, TextArea } from './index';
 import { useForm } from 'react-hook-form';
 import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,25 +18,28 @@ const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isBecomeAuthor, setIsBecomeAuthor] = useState(false);
-    const {register, handleSubmit} = useForm(); 
-    const [error, setError] = useState('');
-    const [selectedOption, setSelectedOption] = useState(null);
+    const {register, handleSubmit, formState: {errors}} = useForm(); 
+    const [serverError, setServerError] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
 
     const handleSelect = ({ value }) => {
         setSelectedOption(value);
     };
 
     const signup = async (data) => {
-        if(!selectedOption) {
-            Swal.fire('Ooop! You can not select gender')
-            return;
-        }
-        if(data.bio.length > 500) {
-            Swal.fire('Your bio data should be less than 500 char.')
-            return;
-        }
+        if(isBecomeAuthor) {
+            if(!selectedOption) {
+                Swal.fire('Ooop! You can not select gender')
+                return;
+            }
 
-        setError('');
+            if(data.bio.length > 500) {
+                Swal.fire('Your bio data should be less than 500 char.')
+                return;
+            }
+        }
+        
+        setServerError('');
 
         try{
             const { name, email, password, image, facebookLink, linkedinLink, gender, bio } = data;
@@ -57,7 +60,7 @@ const Signup = () => {
                 else dispatch(login(userData));
             }
             navigate('/');
-        } catch(error) { setError(error.message) }
+        } catch(error) { setServerError(true) }
     }
 
     return (
@@ -79,7 +82,12 @@ const Signup = () => {
                     </Link>
                 </p>
 
-                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+                {serverError ? <AlertMessage 
+                    showAlert={serverError} 
+                    setShowAlert={setServerError}
+                    type='error'
+                    message='Something went wrong' 
+                /> : null}
                 <form onSubmit={handleSubmit(signup)} className="mt-3">
                     <div className='space-y-5'>
                         <Input
@@ -92,6 +100,7 @@ const Signup = () => {
                                 minLength: 3
                             })}
                         />
+                        { errors.name && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                         {/* become an author */}
                         <div className="flex gap-3 items-center">
@@ -115,27 +124,26 @@ const Signup = () => {
                                 <Input 
                                     label="Image:" 
                                     placeholder='Enter your profile image' 
-                                    type='url' 
-                                    required
+                                    type='url'
                                     {...register('image')}
                                 />
+                                { errors.image && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                                 <Input 
                                     label="Facebook Profile:" 
                                     placeholder='Enter your facebook profile link' 
-                                    type='url' 
-                                    required
+                                    type='url'
                                     {...register('facebookLink')}
                                 />
+                                { errors.facebookLink && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                                 <Input 
                                     label="Linkedin Profile:" 
                                     placeholder='Enter your linkedin profile link' 
-                                    type='url' 
-                                    required
+                                    type='url'
                                     {...register('linkedinLink')}
                                 />
-
+                                { errors.linkedinLink && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
                                 <div className='flex gap-2'>
                                     Gender: <Dropdown options={options} onSelect={handleSelect} />
                                 </div>
@@ -146,7 +154,6 @@ const Signup = () => {
                                     placeholder='Tell me About yourself' 
                                     type='url' 
                                     rows='5'
-                                    required
                                     {...register('bio')}
                                     />
                                 </div>
@@ -166,6 +173,7 @@ const Signup = () => {
                                 }
                             })}
                         />
+                        { errors.email && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                         <Input
                             label='Password: '
@@ -176,6 +184,7 @@ const Signup = () => {
                                 minLength: 6
                             })}
                         />
+                        { errors.password && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                         <Button type="submit">Create Account</Button>
                     </div>

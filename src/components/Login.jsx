@@ -9,12 +9,12 @@ import { useState } from "react";
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { register, handleSubmit } = useForm();
-    const [error, setError] = useState('');
+    const { register, handleSubmit, formState: { errors }} = useForm();
+    const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const login = async (data) => {
-        setError('');
+        setServerError('');
         setLoading(true)
 
         try {
@@ -25,7 +25,7 @@ const Login = () => {
                 navigate('/');
             }
         } catch (error) {
-            setError(error.message);
+            setServerError(error.message);
         } finally {
             setLoading(false)
         }
@@ -49,7 +49,7 @@ const Login = () => {
                     Sign Up
                 </Link>
             </p>
-            {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+            {serverError && <p className="text-red-600 mt-8 text-center">{serverError}</p>}
             <form onSubmit={handleSubmit(login)} className='mt-8'>
                 <div className='space-y-5'>
                     <Input
@@ -64,6 +64,7 @@ const Login = () => {
                             }
                         })}
                     />
+                    { errors.email && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                     <Input
                         label='Password: '
@@ -74,6 +75,7 @@ const Login = () => {
                             minLength: 6
                         })}
                     />
+                    { errors.password && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
                     <Button type="submit">{loading ? 'loading...' : 'Sign in'}</Button>
                 </div>

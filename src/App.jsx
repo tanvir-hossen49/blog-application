@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import authService from './appwrite/auth.js';
 import config from './appwrite/config'
 import { login, logout } from './store/authSlice';
-import {Header, Footer} from './components/index';
+import {Header, Footer } from './components/index';
 import { Outlet } from 'react-router-dom';
 
 function App() {
@@ -37,9 +37,9 @@ function App() {
   return !loading ? (
     <div className='flex flex-col justify-between min-h-screen'>
       <Header/>
-      <main>
-        <Outlet/>
-      </main>
+        <main>
+          <Outlet/>
+        </main>
       <Footer/>
     </div>
   ) : null
