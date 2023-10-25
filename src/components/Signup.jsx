@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { AlertMessage, Button, Dropdown, Input, Logo, TextArea } from './index';
+import { Button, Dropdown, Input, Logo, TextArea } from './index';
 import { useForm } from 'react-hook-form';
 import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,9 +17,10 @@ const options = [
 const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
     const [isBecomeAuthor, setIsBecomeAuthor] = useState(false);
     const {register, handleSubmit, formState: {errors}} = useForm(); 
-    const [serverError, setServerError] = useState(false);
+    const [serverError, setServerError] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleSelect = ({ value }) => {
@@ -40,6 +41,7 @@ const Signup = () => {
         }
         
         setServerError('');
+        setLoading(true);
 
         try{
             const { name, email, password, image, facebookLink, linkedinLink, gender, bio } = data;
@@ -60,7 +62,12 @@ const Signup = () => {
                 else dispatch(login(userData));
             }
             navigate('/');
-        } catch(error) { setServerError(true) }
+        } catch(error) { 
+            setServerError(error.message); 
+            console.log(error.message);
+        } finally{
+            setLoading(false)
+        }
     }
 
     return (
@@ -82,12 +89,8 @@ const Signup = () => {
                     </Link>
                 </p>
 
-                {serverError ? <AlertMessage 
-                    showAlert={serverError} 
-                    setShowAlert={setServerError}
-                    type='error'
-                    message='Something went wrong' 
-                /> : null}
+                {serverError ? <p className="text-red-600 mt-8 text-center">{serverError}</p> : null}        
+                
                 <form onSubmit={handleSubmit(signup)} className="mt-3">
                     <div className='space-y-5'>
                         <Input
@@ -186,7 +189,9 @@ const Signup = () => {
                         />
                         { errors.password && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
-                        <Button type="submit">Create Account</Button>
+                        <Button type="submit" disabled={loading}>
+                            {loading ? 'loading...' : "Create Account" }
+                        </Button>
                     </div>
                 </form>
             </div>

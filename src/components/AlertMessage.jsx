@@ -30,7 +30,7 @@ const AlertMessage = ({ type, message, showAlert, setShowAlert }) => {
     }, 4000);
     
     return () => clearTimeout(timeoutId);
-  }, [])
+  }, [setShowAlert])
 
   return (
     showAlert ? 
