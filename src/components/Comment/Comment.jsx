@@ -87,7 +87,6 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
                                                     year: 'numeric', month: 'short', day: 'numeric'
                                                 })}
                                             </p>
-                                            
                                         </div>
                                     </div>
                                     <div>

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import placeholderImage from '../../assets/placeholder.png'
 import { CloseButton } from '../index.js'
 
-const SideNav = ({setIsOpen, authStatus}) => {
+const SideNav = ( {setIsOpen, authStatus} ) => {
     const navigate = useNavigate();
     const [activeNav, setActiveNav] = useState('');
     const userData = useSelector(state => state.auth.userData);
@@ -19,12 +19,12 @@ const SideNav = ({setIsOpen, authStatus}) => {
         {
             name: "My Posts",
             slug: "/my-posts",
-            active: authStatus,
+            active: authStatus && userData?.isVerified,
         },
         {
             name: "Add Post",
             slug: "/add-post",
-            active: authStatus,
+            active: authStatus && userData?.isVerified,
         },
         {
             name: "Become An Author",
@@ -35,7 +35,7 @@ const SideNav = ({setIsOpen, authStatus}) => {
             name: 'About',
             slug: "/about",
             active: true
-        },
+        }
     ];
 
     useEffect(() => {
@@ -83,11 +83,11 @@ const SideNav = ({setIsOpen, authStatus}) => {
                 authStatus && (
                     <div className="mt-auto">
                         <hr className="pb-5"/>
-                        <div className="pl-8 pr-4 flex items-center gap-3">
+                        <div className="pl-8 pr-4 flex flex-wrap items-center gap-3">
                             <div className="w-14 h-14 rounded-full overflow-hidden">
                                 <img src={userData?.image || placeholderImage} alt="user image" className=""/>
                             </div>
-                            <h3 className="mb-0">{userData?.email}</h3>
+                            <h3 className="text-sm mb-0">{userData?.email}</h3>
                         </div>   
                     </div>  
                 )

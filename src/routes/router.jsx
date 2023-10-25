@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { lazy, Suspense } from 'react';
 import App from '../App';
 import { AuthLayout, BecomeAuthorForm, Loader } from '../components';
+import Bookmark from "../pages/Bookmark";
 
 const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
@@ -102,6 +103,12 @@ export const router = createBrowserRouter([
                 path: '/about',
                 element: <Suspense fallback={<Loader />}>
                     <About />
+                </Suspense>
+            },
+            {
+                path: '/bookmark',
+                element: <Suspense fallback={<Loader />}>
+                    <Bookmark />
                 </Suspense>
             }
         ]

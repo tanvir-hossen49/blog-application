@@ -41,9 +41,7 @@ const Header = () => {
                             {
                                 authStatus ? <LogoutBtn /> : (
                                 <button
-                                onClick={() => {
-                                    navigate('/login')}
-                                }
+                                onClick={() => navigate('/login')}
                                 className='
                                bg-blue-400
                                 inline-bock text-gray-100 hover:text-black px-6 py-2 duration-300 hover:bg-blue-100 rounded-full'

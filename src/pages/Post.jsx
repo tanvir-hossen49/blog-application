@@ -5,6 +5,7 @@ import { Button, Container, PostFloatingBar, Divider } from "../components";
 import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSinglePost } from "../store/myPostsSlice";
+import { showAlertMessage } from "../utilities/AlertMessage";
 
 const Post = () => {
     const [post, setPost] = useState(null);
@@ -48,40 +49,48 @@ const Post = () => {
       }, [slug, navigate, posts, myPosts]);
 
     useEffect(() => {
-    const handleScroll = () => {
-      const contentDiv = document.querySelector('.browser-css');
-      const likeDiv = document.querySelector('.floating-div');
+      const handleScroll = () => {
+        const contentDiv = document.querySelector('.browser-css');
+        const likeDiv = document.querySelector('.floating-div');
 
-      if (!contentDiv || !likeDiv) return;
+        if (!contentDiv || !likeDiv) return;
 
-      const contentBottom = contentDiv.getBoundingClientRect().bottom;
+        const contentBottom = contentDiv.getBoundingClientRect().bottom;
 
-      const isAtBottom = contentBottom <= window.innerHeight;
+        const isAtBottom = contentBottom <= window.innerHeight;
 
-      if (isAtBottom) {
-        setBarState('freeze');
-      } else if (window.scrollY > 30) {
-        setBarState('active');
-      } else {
-        setBarState('default');
-      }
-    };
+        if (isAtBottom) {
+          setBarState('freeze');
+        } else if (window.scrollY > 30) {
+          setBarState('active');
+        } else {
+          setBarState('default');
+        }
+      };
 
-    window.addEventListener('scroll', handleScroll);
+      window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
     }, []);
 
     const deletePost = () => {
-        service.deletePost(post.$id).then((status) => {
-            if (status) {
-                service.deleteFile(post.featuredImg);
-                if(myPosts !== null) dispatch(deleteSinglePost(post.$id))
-                navigate("/");
-            }
-        });
+        showAlertMessage({
+          title: 'Are You Sure!',
+          text: "You want to delete this post",
+          confirmButtonText: 'Yes, delete it'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            service.deletePost(post.$id).then((status) => {
+              if (status) {
+                  service.deleteFile(post.featuredImg);
+                  if(myPosts !== null) dispatch(deleteSinglePost(post.$id))
+                  navigate("/");
+              }
+          });
+          }
+      })
     };
 
     return post ? (

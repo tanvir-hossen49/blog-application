@@ -14,6 +14,8 @@ const options = [
     { label: 'Others', value: 'others' },
 ];
 
+// TODO: add show and hide password
+
 const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();

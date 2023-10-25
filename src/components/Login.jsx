@@ -5,7 +5,9 @@ import authService from "../appwrite/auth";
 import { Button, Input, Logo } from './index';
 import { useForm } from 'react-hook-form';
 import { useState } from "react";
+import config from '../appwrite/config';
 
+// TODO: add show and hide password
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -21,7 +23,16 @@ const Login = () => {
             const session = await authService.login(data);
             if(session) {
                 const userData = await authService.getCurrentUser();
-                if(userData) dispatch(reduxLogin(userData));
+                if(userData) {
+                    config.getAuthor(userData?.$id).then(author => {
+                      if(author) {
+                        const {isVerified, image, facebookLink, linkedinLink, role, bio, gender} = author;
+                        dispatch(reduxLogin({...userData, isVerified, image, facebookLink, linkedinLink, gender, role, bio}))
+                      } else {
+                        dispatch(reduxLogin(userData));
+                      }
+                    })
+                  }
                 navigate('/');
             }
         } catch (error) {

@@ -13,6 +13,7 @@ const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
     const [likeCount, setLikeCount] = useState(like);
     const [isOpenShare, setIsOpenShare] = useState(false);
     const [isOpenCommentBox, setIsOpenCommentBox] = useState(false);
+    const [blogIds, setBlogIds] = useState(JSON.parse(localStorage.getItem('blogIds')) || []);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
@@ -82,6 +83,19 @@ const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
         setIsOpenCommentBox(prev => !prev)
     };
 
+    const handleBookmark = () => {
+        if (blogIds.includes(slug)) {
+            const updatedBlogIds = blogIds.filter(blogId => blogId !== slug);
+            setBlogIds(updatedBlogIds);
+            localStorage.setItem('blogIds', JSON.stringify(updatedBlogIds));
+        } else {
+            const updatedBlogIds = [...blogIds, slug];
+            setBlogIds(updatedBlogIds);
+            localStorage.setItem('blogIds', JSON.stringify(updatedBlogIds));
+        }
+    };
+
+
     return (
         <>
             <div className={`post-floating-bar fixed ${barState} transition-all duration-300 flex left-0 right-0 z-50 h-12 w-full flex-wrap justify-center 2xl:h-14 `}>
@@ -111,8 +125,8 @@ const PostFloatingBar = ({ barState, like, likedBy, userId, slug, posts  }) => {
                     {/* bookmark */}
                     <div>
                         <div className="flex justify-center items-center gap-2">
-                            <button>
-                                <svg viewBox="0 0 16 20" className="h-4 w-4 scale-[0.97] stroke-current text-slate-800 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.2 19V5.8C15.2 4.11984 15.2 3.27976 14.8731 2.63803C14.5854 2.07354 14.1265 1.6146 13.562 1.32698C12.9203 1 12.0802 1 10.4 1H5.60005C3.91989 1 3.07981 1 2.43808 1.32698C1.87359 1.6146 1.41465 2.07354 1.12703 2.63803C0.800049 3.27976 0.800049 4.11984 0.800049 5.8V19L5.85342 16.4733C6.64052 16.0798 7.03406 15.883 7.44686 15.8055C7.81246 15.737 8.18764 15.737 8.55324 15.8055C8.96603 15.883 9.35959 16.0798 10.1467 16.4733L15.2 19Z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+                            <button onClick={handleBookmark}>
+                                <svg viewBox="0 0 16 20" className="h-4 w-4 scale-[0.97] stroke-current text-slate-800 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6" fill={blogIds.includes(slug) ? 'black' :'none'} xmlns="http://www.w3.org/2000/svg"><path d="M15.2 19V5.8C15.2 4.11984 15.2 3.27976 14.8731 2.63803C14.5854 2.07354 14.1265 1.6146 13.562 1.32698C12.9203 1 12.0802 1 10.4 1H5.60005C3.91989 1 3.07981 1 2.43808 1.32698C1.87359 1.6146 1.41465 2.07354 1.12703 2.63803C0.800049 3.27976 0.800049 4.11984 0.800049 5.8V19L5.85342 16.4733C6.64052 16.0798 7.03406 15.883 7.44686 15.8055C7.81246 15.737 8.18764 15.737 8.55324 15.8055C8.96603 15.883 9.35959 16.0798 10.1467 16.4733L15.2 19Z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
                             </button>
                         </div>    
                     </div>
