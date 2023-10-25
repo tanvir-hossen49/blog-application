@@ -21,7 +21,7 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
                 slug, commenterId: userId, commenterName: userData.name, 
                 comment: data.comment, commenterImage: userData?.image
             });
-console.log(response);
+            // TODO: save comment into redux
             if(response) {
                 setComments(prev => [...prev, response])
                 setPostComment(true)
@@ -83,7 +83,11 @@ console.log(response);
                                         <img src={comment?.commenterImage} className="w-10 h-10 bg-gray-500 rounded-full text-center" />
                                         <div>
                                             <p>{comment.commenterName}</p>
-                                            <p className="text-sm">{comment.$createdAt}</p>
+                                            <p className="text-sm">{ new Date(comment.$createdAt).toLocaleDateString('en-US', {
+                                                    year: 'numeric', month: 'short', day: 'numeric'
+                                                })}
+                                            </p>
+                                            
                                         </div>
                                     </div>
                                     <div>
