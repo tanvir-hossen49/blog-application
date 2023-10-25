@@ -34,7 +34,6 @@ export class Service {
     }
 
     async getAuthor(userId) {
-        console.log(userId);
         try{
             return await this.databases.getDocument(
                 conf.appDatabaseId, conf.appwriteAuthorCollectionId, userId
@@ -68,6 +67,27 @@ export class Service {
             return true;
         }catch(error) {
             throw new Error(error);
+        }
+    }
+
+    async createComment({ slug, commenterId, comment, commenterName, commenterImage }) {
+        try{
+            return await this.databases.createDocument(
+                conf.appDatabaseId, conf.appwriteCommentCollectionId, ID.unique(),
+                { commenterId, comment, commenterName, blogId: slug, commenterImage }
+            );
+        }catch(error) {
+            throw new Error(error);
+        }
+    }
+
+    async getComment( blogId ) {
+        try{
+            return await this.databases.listDocuments(
+                conf.appDatabaseId, conf.appwriteCommentCollectionId, [ Query.equal('blogId', blogId)] ,
+            );
+        }catch(error) {
+            throw new Error(error); 
         }
     }
 
