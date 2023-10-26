@@ -84,7 +84,7 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
                     {/* comment list */}
                     { dataLoading ? <CommentSkeleton count={3}/> : ( 
                     <div className="space-y-4 ">
-                        {comments?.length === 0 ? "No Comment in this post " : comments.map(comment => (
+                        {comments?.length === 0 ? "No Comment in this post " : comments?.map(comment => (
                             <div key={comment.$id}>
                                 <div className="flex justify-between items-center">
                                     <div className="flex gap-3 items-center">
