@@ -1,11 +1,15 @@
 import { useForm } from "react-hook-form";
 import config from '../../appwrite/config'
-import { AlertMessage, Button, CloseButton, TextArea } from '../index';
+import { AlertMessage, Button, CloseButton, CommentSkeleton, TextArea } from '../index';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
+// TODO: report a comment
+// TODO: replay comment 
+
 const Comment = ({setIsOpenCommentBox, userId, slug}) => {
     const [loading, setLoading] = useState(false);
+    const [dataLoading, setDataLoading] = useState(true);
     const [postComment, setPostComment] = useState(false);
     const [comments, setComments] = useState(null);
     const { register, handleSubmit, setValue } = useForm();
@@ -29,7 +33,8 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
         } catch (error) {
             console.log(error.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
+            
         }
     }
 
@@ -38,13 +43,16 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
             try{
                 const { documents } = await config.getComment(slug);
                 setComments(documents);
+                setDataLoading(false);
             }catch(error) {
                 console.log(error.message);
+            } finally{
+                setDataLoading(false);
             }
         })();
     }, [slug])
 
-    return (
+    return  (
         <>  
             {postComment && <AlertMessage showAlert={postComment} setShowAlert={setPostComment} type='success' message="comment successfully post" />}
 
@@ -74,8 +82,9 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
                         </Button>
                     </form>
                     {/* comment list */}
+                    { dataLoading ? <CommentSkeleton count={3}/> : ( 
                     <div className="space-y-4 ">
-                        { comments ? comments.map(comment => (
+                        {comments?.length === 0 ? "No Comment in this post " : comments.map(comment => (
                             <div key={comment.$id}>
                                 <div className="flex justify-between items-center">
                                     <div className="flex gap-3 items-center">
@@ -100,9 +109,9 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
                                 </div>
                                 <hr/>
                             </div>
-                        )) : null }
-                        
-                    </div>
+                        ))}    
+                    </div>)
+                    }
                 </div>
             </div>
         </>

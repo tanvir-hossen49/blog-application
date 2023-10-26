@@ -26,10 +26,12 @@ import Dropdown from "./DropDownMenu";
 import TextArea from "./TextArea";
 import AlertMessage from "./AlertMessage";
 import CloseButton from "./Button/CloseButton";
+import CommentSkeleton from "./Skeleton/CommentSkeleton";
 
 export {
     Header, Footer, Container, Input, Button, LogoutBtn, Select, PostCard,
     Logo, Signup, Login, AuthLayout, RealTimeEditor, PostForm, PostCardSkeleton,
     PostFloatingBar, Divider, SharePost, SearchBox, Comment, Loader, Categories,
-    BecomeAnAuthor, BecomeAuthorForm, Dropdown, TextArea, AlertMessage, CloseButton
+    BecomeAnAuthor, BecomeAuthorForm, Dropdown, TextArea, AlertMessage, CloseButton,
+    CommentSkeleton
 };
