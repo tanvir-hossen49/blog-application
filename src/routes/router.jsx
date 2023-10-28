@@ -2,17 +2,19 @@ import { createBrowserRouter } from "react-router-dom";
 import { lazy, Suspense } from 'react';
 import App from '../App';
 import { AuthLayout, BecomeAuthorForm, Loader } from '../components';
-import Bookmark from "../pages/Bookmark";
+import Dashboard from "../layout/Dashboard";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
 
 const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
 const Signup = lazy(() => import('../pages/Signup'));
-const AddPost = lazy(() => import('../pages/AddPost'));
+const AddPost = lazy(() => import('../pages/Dashboard/Author/AddPost'));
 const Post = lazy(() => import('../pages/Post'));
-const EditPost = lazy(() => import('../pages/EditPost'));
-const MyPost = lazy(() => import('../pages/MyPost'));
+const EditPost = lazy(() => import('../pages/Dashboard/Author/EditPost'));
+const MyPost = lazy(() => import('../pages/Dashboard/Author/MyPost'));
 const About = lazy(() => import('../pages/About'));
 const BecomeAuthor = lazy(() => import('../pages/BecomeAuthor'));
+const MyFavoriteBlog = lazy(() => import('../pages/MyFavoriteBlog'));
 
 export const router = createBrowserRouter([
     {
@@ -46,42 +48,6 @@ export const router = createBrowserRouter([
                 )
             },
             {
-                path: '/add-post',
-                element: (
-                    <AuthLayout authentication>
-                        <Suspense fallback={<Loader />}>
-                            <AddPost />
-                        </Suspense>
-                    </AuthLayout>
-                )
-            },
-            {
-                path: '/post/:slug',
-                element: <Suspense fallback={<Loader />}>
-                    <Post />
-                </Suspense>
-            },
-            {
-                path: '/edit-post/:slug',
-                element:(
-                    <AuthLayout authentication>
-                        <Suspense fallback={<Loader />}>
-                            <EditPost />
-                        </Suspense>
-                    </AuthLayout>
-                )
-            }, 
-            {
-                path: '/my-posts',
-                element: (
-                    <AuthLayout authentication>
-                        <Suspense fallback={<Loader />}>
-                            <MyPost/>
-                        </Suspense>
-                    </AuthLayout>
-                )
-            },
-            {
                 path: '/become-an-author',
                 element: (
                     <Suspense fallback={<Loader />}>
@@ -106,11 +72,58 @@ export const router = createBrowserRouter([
                 </Suspense>
             },
             {
-                path: '/bookmark',
+                path: '/my-favorite',
                 element: <Suspense fallback={<Loader />}>
-                    <Bookmark />
+                    <MyFavoriteBlog />
                 </Suspense>
-            }
+            },
+            {
+                path: '/post/:slug',
+                element: <Suspense fallback={<Loader />}>
+                    <Post />
+                </Suspense>
+            }, 
+        ]
+    }, 
+    {
+        path: '/dashboard',
+        element: <Dashboard />,
+        children: [
+            {
+                path: 'manage-users',
+                element: <ManageUsers />
+            },
+            {
+                path: 'my-posts',
+                element: (
+                    <AuthLayout authentication>
+                        <Suspense fallback={<Loader />}>
+                            <MyPost/>
+                        </Suspense>
+                    </AuthLayout>
+                )
+            },
+            {
+                path: 'edit-post/:slug',
+                element:(
+                    <AuthLayout authentication>
+                        <Suspense fallback={<Loader />}>
+                            <EditPost />
+                        </Suspense>
+                    </AuthLayout>
+                )
+            },
+            {
+                path: 'add-post',
+                element: (
+                    <AuthLayout authentication>
+                        <Suspense fallback={<Loader />}>
+                            <AddPost />
+                        </Suspense>
+                    </AuthLayout>
+                )
+            },
+            
         ]
     }
 ]);

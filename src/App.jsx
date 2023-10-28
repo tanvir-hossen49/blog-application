@@ -1,48 +1,46 @@
-import { useState } from 'react';
-import './App.css';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import authService from './appwrite/auth.js';
-import config from './appwrite/config'
-import { login, logout } from './store/authSlice';
-import {Header, Footer } from './components/index';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
+import { Header, Footer, Loader } from './components/index';
+import authService from './appwrite/auth.js';
+import './App.css';
+import { isAuthor } from './utilities/isAuthor';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
+  const userData = useSelector(state => state.auth.userData);
+
   useEffect(() => {
-    authService.getCurrentUser().then(userData => {
-      if(userData) {
-        config.getAuthor(userData?.$id).then(author => {
-          if(author) {
-            const {isVerified, image, facebookLink, linkedinLink, role, bio, gender} = author;
-            dispatch(login({...userData, isVerified, image, facebookLink, linkedinLink, gender, role, bio}))
-          } else {
-            dispatch(login(userData));
-          }
-        })
-      } else{
-        dispatch(logout());
+    userData === null ? (async () => {
+      try {
+        console.log('re-app from dashboard');
+        const userData = await authService.getCurrentUser();
+        await isAuthor(userData, dispatch);
+      } catch (error) {
+        setError(true);
+        console.log('get current user :: error ::', error);
+      } finally {
+        setLoading(false);
       }
-    }).catch(error => {
-      dispatch(logout());
-      console.log('get current user :: error ::', error)
-    }).finally(() => {
-      setLoading(false);
-    })
-  }, [dispatch])
+    })() : setLoading(false)
+  }, [dispatch, userData]);
+
+  if(error) return <h1>Something went wrong</h1>
 
   return !loading ? (
     <div className='flex flex-col justify-between min-h-screen'>
-      <Header/>
-        <main>
-          <Outlet/>
-        </main>
-      <Footer/>
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
     </div>
-  ) : null
+  ) : (
+    <Loader />
+  );
 }
 
-export default App
+export default App;

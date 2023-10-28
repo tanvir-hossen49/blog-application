@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import service from "../appwrite/config";
+import service from "../../../appwrite/config";
 import { useState } from "react";
 import { Query} from "appwrite";
-import { Container, PostCard, PostCardSkeleton } from "../components";
-import { addMyPost } from "../store/myPostsSlice";
+import { Container, PostCard, PostCardSkeleton } from "../../../components";
+import { addMyPost } from "../../../store/myPostsSlice";
 
 const MyPost = () => {
     const [loading, setLoading] = useState(true);
     const userData = useSelector((state) => state.auth.userData);
     const userId = userData.$id;
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const posts = useSelector(store => store.myPost.posts);
 

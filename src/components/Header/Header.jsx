@@ -53,6 +53,7 @@ const Header = () => {
                     </div>
                 </nav>
             </Container>
+            
             {
                 isOpen ? (<>
                     <div onClick={handleNav} className="fixed bg-black opacity-60 top-0 bottom-0 left-0 right-0 z-40 "></div>

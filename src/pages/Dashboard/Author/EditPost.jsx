@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import service from '../appwrite/config';
+import service from '../../../appwrite/config';
 import { useState } from 'react';
-import { Container, PostForm } from '../components'
+import { Container, PostForm } from '../../../components'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 

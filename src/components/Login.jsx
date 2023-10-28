@@ -88,7 +88,7 @@ const Login = () => {
                     />
                     { errors.password && <p className="text-red-500 text-xs italic">Please fill out this field.</p>}
 
-                    <Button type="submit">{loading ? 'loading...' : 'Sign in'}</Button>
+                    <Button type="submit" disabled={loading}>{loading ? 'loading...' : 'Sign in'}</Button>
                 </div>
             </form>
             </div>

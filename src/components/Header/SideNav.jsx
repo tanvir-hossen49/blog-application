@@ -10,37 +10,55 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
     const [activeNav, setActiveNav] = useState('');
     const userData = useSelector(state => state.auth.userData);
 
+    const isDashboardActive = authStatus && 
+                                userData?.isVerified && 
+                                activeNav.includes('/dashboard');
+
+    const isNotDashboardActive = authStatus && 
+                                userData?.isVerified && 
+                                !activeNav.includes('/dashboard');
+
     const navItems = [
-        {
-            name: 'Home',
-            slug: "/",
-            active: true
+        { 
+            name: 'Home', 
+            slug: '/', 
+            active: true 
         },
-        {
-            name: "My Posts",
-            slug: "/my-posts",
-            active: authStatus && userData?.isVerified,
+        { 
+            name: 'My Posts', 
+            slug: '/dashboard/my-posts', 
+            active: isDashboardActive 
         },
-        {
-            name: "Add Post",
-            slug: "/add-post",
-            active: authStatus && userData?.isVerified,
+        { 
+            name: 'Add Post', 
+            slug: '/dashboard/add-post', 
+            active: isDashboardActive 
         },
-        {
-            name: "Become An Author",
-            slug: "/become-an-author",
-            active: true,
+        { 
+            name: 'Become An Author', 
+            slug: '/become-an-author', 
+            active: !authStatus || !userData?.isVerified 
         },
-        {
-            name: 'About',
-            slug: "/about",
-            active: true
+        { 
+            name: 'My Favorite', 
+            slug: '/my-favorite', 
+            active: !authStatus || !userData?.isVerified 
+        },
+        { 
+            name: 'Dashboard', 
+            slug: '/dashboard', 
+            active: isNotDashboardActive 
+        },
+        { 
+            name: 'About', 
+            slug: '/about', 
+            active: true && isNotDashboardActive
         }
     ];
 
     useEffect(() => {
         setActiveNav(location.pathname)
-    },[navigate])
+    },[navigate]);
 
     return (
         <div className="fixed top-0 bottom-0 left-0 z-50 flex w-80 flex-col bg-white text-black shadow-2xl py-4">
