@@ -3,7 +3,8 @@ import { lazy, Suspense } from 'react';
 import App from '../App';
 import { AuthLayout, BecomeAuthorForm, Loader } from '../components';
 import Dashboard from "../layout/Dashboard";
-import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
+import AdminRoute from "./AdminRoute";
+import ManageAuthor from "../pages/Dashboard/Admin/ManageAuthor";
 
 const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
@@ -89,9 +90,12 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: <Dashboard />,
         children: [
+            // admin routes
             {
-                path: 'manage-users',
-                element: <ManageUsers />
+                path: 'manage-author',
+                element: <AdminRoute > 
+                    <ManageAuthor />
+                </AdminRoute>
             },
             {
                 path: 'my-posts',
@@ -123,7 +127,6 @@ export const router = createBrowserRouter([
                     </AuthLayout>
                 )
             },
-            
         ]
     }
 ]);

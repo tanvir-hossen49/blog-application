@@ -10,44 +10,54 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
     const [activeNav, setActiveNav] = useState('');
     const userData = useSelector(state => state.auth.userData);
 
-    const isDashboardActive = authStatus && 
-                                userData?.isVerified && 
-                                activeNav.includes('/dashboard');
+    const isAdmin = userData.labels.includes('admin');
+    const isAuthor = userData?.isVerified && userData.role === 'author';
 
-    const isNotDashboardActive = authStatus && 
-                                userData?.isVerified && 
-                                !activeNav.includes('/dashboard');
+    const isDashboardActive = authStatus && isAuthor || isAdmin && 
+                            !activeNav.includes('/dashboard');
+
+    const isNotDashboardActive = !authStatus || !activeNav.includes('/dashboard');
 
     const navItems = [
         { 
             name: 'Home', 
             slug: '/', 
-            active: true 
+            active: true && isNotDashboardActive
         },
         { 
             name: 'My Posts', 
             slug: '/dashboard/my-posts', 
-            active: isDashboardActive 
+            active: isAuthor || isAdmin && !isDashboardActive
         },
         { 
             name: 'Add Post', 
             slug: '/dashboard/add-post', 
-            active: isDashboardActive 
+            active: isAuthor || isAdmin && !isDashboardActive
         },
         { 
             name: 'Become An Author', 
             slug: '/become-an-author', 
-            active: !authStatus || !userData?.isVerified 
+            active: !isAuthor && !isAdmin
         },
         { 
             name: 'My Favorite', 
             slug: '/my-favorite', 
-            active: !authStatus || !userData?.isVerified 
+            active: isNotDashboardActive
         },
         { 
             name: 'Dashboard', 
             slug: '/dashboard', 
-            active: isNotDashboardActive 
+            active: isDashboardActive
+        },
+        {
+            name: 'Manage Author',
+            slug: '/dashboard/manage-author',
+            active: isAdmin && !isDashboardActive
+        },
+        {
+            name: 'Manage Blogs',
+            slug: '/manage-blogs',
+            active: isAdmin && !isDashboardActive
         },
         { 
             name: 'About', 
@@ -98,13 +108,14 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
 
             
             {
-                authStatus && (
+                authStatus && isAuthor || isAdmin && (
                     <div className="mt-auto">
                         <hr className="pb-5"/>
-                        <div className="pl-8 pr-4 flex flex-wrap items-center gap-3">
-                            <div className="w-14 h-14 rounded-full overflow-hidden">
-                                <img src={userData?.image || placeholderImage} alt="user image" className=""/>
+                        <div className="pl-8 pr-4 text-center space-y-3">
+                            <div className="w-14 h-14 mx-auto rounded-full overflow-hidden">
+                                <img src={userData?.image || placeholderImage} alt="user image" />
                             </div>
+                            <div>{isAdmin && 'Admin' || isAuthor && 'Author'}</div>
                             <h3 className="text-sm mb-0">{userData?.email}</h3>
                         </div>   
                     </div>  

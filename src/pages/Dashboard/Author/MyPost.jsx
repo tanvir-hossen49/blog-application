@@ -34,7 +34,7 @@ const MyPost = () => {
 
     if(loading) return <PostCardSkeleton count={8} />;
 
-    if(posts?.length === 0) {
+    if(posts?.length === 0 || posts === null) {
       return  <div className="w-full py-8 mt-4 text-center">
           <Container>
               <div className="flex flex-wrap">

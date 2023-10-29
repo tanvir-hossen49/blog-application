@@ -34,7 +34,7 @@ function Dashboard() {
   if(error) return <h1>Something went wrong</h1>
 
   return !loading ? (
-    <div className='flex flex-col justify-between min-h-screen'>
+    <div>
       <Header />
         <main>
           <Outlet />
