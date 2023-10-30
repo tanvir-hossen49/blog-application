@@ -16,7 +16,6 @@ function App() {
   useEffect(() => {
     userData === null ? (async () => {
       try {
-        console.log('re-app from dashboard');
         const userData = await authService.getCurrentUser();
         await isAuthor(userData, dispatch);
       } catch (error) {

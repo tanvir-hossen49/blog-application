@@ -33,6 +33,17 @@ export class Service {
         }
     }
 
+    async getAuthors() {
+        try{
+            const response = await this.databases.listDocuments(
+                conf.appDatabaseId, conf.appwriteAuthorCollectionId
+            );
+            return response.documents
+        }catch(error) {
+            console.log('get authors :: error ::', error)
+        }
+    }
+
     async getAuthor(userId) {
         try{
             return await this.databases.getDocument(

@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import config from '../../appwrite/config'
-import { AlertMessage, Button, CloseButton, CommentSkeleton, TextArea } from '../index';
+import { Button, CloseButton, CommentSkeleton, TextArea } from '../index';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { showAlertMessage } from "../../utilities/AlertMessage";
 
 // TODO: report a comment
 // TODO: replay comment 
@@ -10,7 +11,6 @@ import { useSelector } from "react-redux";
 const Comment = ({setIsOpenCommentBox, userId, slug}) => {
     const [loading, setLoading] = useState(false);
     const [dataLoading, setDataLoading] = useState(true);
-    const [postComment, setPostComment] = useState(false);
     const [comments, setComments] = useState(null);
     const { register, handleSubmit, setValue } = useForm();
 
@@ -28,7 +28,15 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
             // TODO: save comment into redux
             if(response) {
                 setComments(prev => [...prev, response])
-                setPostComment(true)
+                 
+                showAlertMessage({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Comment successfully post',
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    timer: 2000
+                });
             }
         } catch (error) {
             console.log(error.message);
@@ -45,6 +53,14 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
                 setComments(documents);
                 setDataLoading(false);
             }catch(error) {
+                showAlertMessage({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'something went wrong ',
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    timer: 2000
+                }); 
                 console.log(error.message);
             } finally{
                 setDataLoading(false);
@@ -54,8 +70,6 @@ const Comment = ({setIsOpenCommentBox, userId, slug}) => {
 
     return  (
         <>  
-            {postComment && <AlertMessage showAlert={postComment} setShowAlert={setPostComment} type='success' message="comment successfully post" />}
-
             <div className="fixed z-[60] 
                 md:top-0 top-12 
                 md:bottom-0 bottom-3 

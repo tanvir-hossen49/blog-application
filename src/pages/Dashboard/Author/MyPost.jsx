@@ -40,7 +40,7 @@ const MyPost = () => {
               <div className="flex flex-wrap">
                   <div className="p-2 w-full">
                       <h1 className="text-2xl font-bold hover:text-gray-500">
-                          no post found
+                          No post found
                       </h1>
                   </div>
               </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Header } from "../components";
+import { Header, Loader } from "../components";
 import { Outlet } from "react-router-dom";
 import authService from "../appwrite/auth";
 import { isAuthor } from "../utilities/isAuthor";
@@ -15,7 +15,6 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      console.log('re-rander from dashboard');
       try {
         const userData = await authService.getCurrentUser();
         await isAuthor(userData, dispatch);
@@ -40,7 +39,7 @@ function Dashboard() {
           <Outlet />
         </main>
     </div>
-  ) : null;
+  ) : <Loader />;
 }
 
 export default Dashboard;
