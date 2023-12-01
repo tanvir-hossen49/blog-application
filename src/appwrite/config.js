@@ -22,11 +22,11 @@ export class Service {
         }
     }
 
-    async createAuthor({ userId, image, facebookLink, linkedinLink, gender, bio }) {
+    async createAuthor({ name, email, userId, image, facebookLink, linkedinLink, gender, bio }) {
         try{
             return await this.databases.createDocument(
                 conf.appDatabaseId, conf.appwriteAuthorCollectionId, userId,
-                { image, facebookLink, linkedinLink, gender, bio }
+                { name, email, image, facebookLink, linkedinLink, gender, bio }
             );
         }catch(error) {
             throw new Error(error);

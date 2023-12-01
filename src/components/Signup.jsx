@@ -46,7 +46,7 @@ const Signup = () => {
         setLoading(true);
 
         try{
-            const { name, email, password, image, facebookLink, linkedinLink, gender, bio } = data;
+            const { name, email, password, image, facebookLink, linkedinLink, bio } = data;
 
             await authService.createAccount({name, email, password});
             const userData = await authService.getCurrentUser();
@@ -55,11 +55,11 @@ const Signup = () => {
                 if(isBecomeAuthor) {
                     const userId = userData.$id;
                     const responseAuthor = await config.createAuthor(
-                        { image, facebookLink, linkedinLink, userId, gender, bio }
+                        { name, email, image, facebookLink, linkedinLink, userId, gender: selectedOption, bio }
                     );
 
                     const { isVerified, role } = responseAuthor;
-                    if(responseAuthor)  dispatch(login(userData, { isVerified, image, facebookLink, linkedinLink, role, bio, gender }));
+                    if(responseAuthor)  dispatch(login(userData, { isVerified, image, facebookLink, linkedinLink, role, bio, gender: selectedOption }));
                 }
                 else dispatch(login(userData));
             }

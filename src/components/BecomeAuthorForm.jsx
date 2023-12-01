@@ -36,7 +36,9 @@ const BecomeAuthorForm = () => {
         
         try{
             const userId = userData?.$id;
-            const responseAuthor = await config.createAuthor({...data, userId, gender: selectedOption});
+            const name = userData.name;
+            const email = userData.email;
+            const responseAuthor = await config.createAuthor({ name, email,...data, userId, gender: selectedOption});
             
             const { isVerified, role } = responseAuthor;
 

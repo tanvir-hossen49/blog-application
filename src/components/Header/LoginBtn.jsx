@@ -10,8 +10,8 @@ const LogoutBtn = () => {
 
     const handleLogout = () => {
         showAlertMessage({
-            title: 'Oops!',
-            text: "Can't comment without logging in.",
+            title: 'Are you sure?',
+            text: "You want to logout",
             confirmButtonText: 'Yes, Logout'
         }).then((result) => {
             if (result.isConfirmed) {

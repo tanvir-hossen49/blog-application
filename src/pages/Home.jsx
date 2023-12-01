@@ -13,10 +13,11 @@ const Home = () => {
 
     useEffect(() => {
         if(posts === null) {
-            (async () => {
+            ( async () => {
                 try {
                   setLoading(true);
                   const response = await service.getPosts();
+
                   if (response.documents.length > 0) {
                     dispatch(addPost(response.documents));
                   }
@@ -26,14 +27,14 @@ const Home = () => {
                   setLoading(false);
                 }
             })();
-        }else{
+        } else{
             setLoading(false)
         }
     }, [dispatch, posts]);
 
     if(loading) return <PostCardSkeleton count={8}/>
 
-    if(posts?.length === 0) {
+    if(posts?.length === 0 || posts === null) {
         return  <div className="w-full py-8 mt-4 text-center">
             <Container>
                 <div className="flex flex-wrap">

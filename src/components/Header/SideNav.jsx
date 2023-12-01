@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Logo";
 import { useSelector } from "react-redux";
@@ -10,8 +10,8 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
     const [activeNav, setActiveNav] = useState('');
     const userData = useSelector(state => state.auth.userData);
 
-    const isAdmin = userData.labels.includes('admin');
-    const isAuthor = userData?.isVerified && userData.role === 'author';
+    const isAdmin = userData?.labels?.includes('admin');
+    const isAuthor = userData?.isVerified && userData?.role === 'author';
 
     const isDashboardActive = authStatus && isAuthor || isAdmin && 
                             !activeNav.includes('/dashboard');
@@ -35,11 +35,6 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
             active: isAuthor || isAdmin && !isDashboardActive
         },
         { 
-            name: 'Become An Author', 
-            slug: '/become-an-author', 
-            active: !isAuthor && !isAdmin
-        },
-        { 
             name: 'My Favorite', 
             slug: '/my-favorite', 
             active: isNotDashboardActive
@@ -60,11 +55,24 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
             active: isAdmin && !isDashboardActive
         },
         { 
+            name: 'Become An Author', 
+            slug: '/become-an-author', 
+            active: isNotDashboardActive
+        },
+        { 
             name: 'About', 
             slug: '/about', 
             active: true && isNotDashboardActive
         }
     ];
+    
+    const handleClick = useCallback(
+        (slug) => {
+            setIsOpen(prev => !prev);
+            navigate(slug);
+        },
+        [setIsOpen, navigate]
+    );
 
     useEffect(() => {
         setActiveNav(location.pathname)
@@ -85,22 +93,16 @@ const SideNav = ( {setIsOpen, authStatus} ) => {
                 <div className="py-10 pl-8 pr-4">
                     <div className="mx-auto ">
                         <ul className='ml-auto'>
-                            {
-                                navItems.map(item => (
-                                item.active ? (
-                                    <li key={item.name} onClick={() => {
-                                        setIsOpen(prev => !prev)
-                                        navigate(item.slug)
-                                    }}
+                        { navItems.map(item => (
+                            item.active ? (
+                                <li key={item.name} onClick={() => handleClick(item.slug)}
                                     className={` ${activeNav === item.slug  ? 'bg-blue-100' : ''} duration-200 hover:bg-blue-100 rounded-sm py-2`}>
-                                        <button
+                                    <button
                                         className='inline-bock px-6 py-2'
-                                        >{item.name}</button>
-                                    </li>
-                                ) : null
-                                ))
-                            }
-                            
+                                    >{item.name}</button>
+                                </li>
+                            ) : null ))
+                        }  
                         </ul>
                     </div>
                 </div>
